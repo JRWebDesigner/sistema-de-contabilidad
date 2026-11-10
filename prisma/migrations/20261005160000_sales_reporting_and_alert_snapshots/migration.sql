@@ -1,0 +1,9 @@
+BEGIN;
+
+ALTER TABLE "Sale"
+ADD COLUMN "priceListName" VARCHAR(120);
+
+ALTER TABLE "Proforma"
+ADD COLUMN "priceListName" VARCHAR(120);
+
+COMMIT;

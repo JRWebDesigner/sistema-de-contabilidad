@@ -1,0 +1,9 @@
+CREATE TABLE "DocumentSequence" (
+  "key" VARCHAR(10) NOT NULL,
+  "value" INTEGER NOT NULL DEFAULT 0,
+  "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "DocumentSequence_pkey" PRIMARY KEY ("key")
+);
+
+ALTER TABLE "Sale"
+ALTER COLUMN "number" TYPE VARCHAR(80);

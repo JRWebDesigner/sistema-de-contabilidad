@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Importlilimlab — Gestión de tu negocio',
-  description: 'Sistema administrativo para ventas, inventario, finanzas y clientes.',
+  title: 'Businessman S.R.L. — Gestión de tu negocio',
+  description: 'Sistema administrativo de Businessman S.R.L. para ventas, inventario, finanzas y clientes.',
   generator: 'v0.app',
   icons: {
     icon: [
