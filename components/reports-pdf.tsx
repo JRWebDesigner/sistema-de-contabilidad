@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingBottom: 12,
     borderBottomWidth: 2,
-    borderBottomColor: '#ff7900',
+    borderBottomColor: '#087f5b',
   },
   brand: { fontSize: 18, fontWeight: 700, color: '#332719' },
-  brandSuffix: { color: '#9b4b00', fontSize: 11 },
+  brandSuffix: { color: '#1484a6', fontSize: 11 },
   subtitle: { marginTop: 4, color: '#897966', fontSize: 7 },
   titleBlock: { alignItems: 'flex-end', maxWidth: '60%' },
   title: { fontSize: 16, fontWeight: 700, textAlign: 'right' },
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   table: { marginTop: 12 },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#ff7900',
+    backgroundColor: '#087f5b',
     color: '#24170b',
   },
   headerCell: { padding: 5, fontWeight: 700, color: '#24170b' },
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff2e6',
     borderTopWidth: 1,
-    borderTopColor: '#ff7900',
+    borderTopColor: '#1484a6',
   },
   totalLabel: { padding: 5, fontWeight: 700, textAlign: 'right' },
   summary: { marginTop: 18 },
@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     paddingBottom: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#ff7900',
-    color: '#9b4b00',
+    borderBottomColor: '#1484a6',
+    color: '#1484a6',
     fontSize: 11,
     fontWeight: 700,
   },
@@ -141,11 +141,11 @@ function ReportDocument({ title, columns, rows, summaryRows, generatedAt, period
   ]
 
   return (
-    <Document title={`${title} · Businessman S.R.L.`} author="Businessman S.R.L." language="es">
+    <Document title={`${title} · Importlilimlab`} author="Importlilimlab" language="es">
       <Page size="A4" orientation="landscape" style={styles.page} wrap>
         <View style={styles.header} fixed>
           <View>
-            <Text style={styles.brand}>Businessman <Text style={styles.brandSuffix}>S.R.L.</Text></Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             <Text style={styles.subtitle}>SISTEMA ADMINISTRATIVO</Text>
           </View>
           <View style={styles.titleBlock}>
@@ -196,7 +196,7 @@ function ReportDocument({ title, columns, rows, summaryRows, generatedAt, period
           </View>
         )}
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Reporte generado el {generatedAt}</Text>
+          <Text>Importlilimlab · Reporte generado el {generatedAt}</Text>
           <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

@@ -5324,3 +5324,825 @@ html.dark .users-form-grid label > span {
 html.dark .users-form-actions {
   border-top-color: #51463a;
 }
+
+:root {
+  color-scheme: light;
+  --background: #f3f8f6;
+  --foreground: #17352f;
+  --card: #ffffff;
+  --card-foreground: #17352f;
+  --popover: #ffffff;
+  --popover-foreground: #17352f;
+  --primary: #087f5b;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f1f8;
+  --secondary-foreground: #155e85;
+  --muted: #edf4f2;
+  --muted-foreground: #657d77;
+  --accent: #e7f2f7;
+  --accent-foreground: #155e85;
+  --accent-soft: #dcefe8;
+  --border: #dce9e4;
+  --border-color: #dce9e4;
+  --input: #d2e2dc;
+  --ring: #1484a6;
+  --orange-950: #064e3b;
+  --orange-800: #087f5b;
+  --orange-700: #0a9168;
+  --orange-500: #1484a6;
+  --orange-400: #087f5b;
+  --orange-100: #e0f2eb;
+  --orange-50: #edf6f7;
+  --ink: #17352f;
+  --text-soft: #657d77;
+  --line: #dce9e4;
+  --surface: #ffffff;
+  --text: #17352f;
+  --muted-text: #657d77;
+  --sidebar: #103c37;
+  --sidebar-foreground: #effaf6;
+  --sidebar-primary: #35c28a;
+  --sidebar-primary-foreground: #073d32;
+  --sidebar-accent: #1d5149;
+  --sidebar-accent-foreground: #f3fbf8;
+  --sidebar-border: #28564e;
+  --sidebar-ring: #48bad0;
+}
+
+html.dark {
+  color-scheme: dark;
+  --background: #101f24;
+  --foreground: #e5f1ee;
+  --card: #172a2e;
+  --card-foreground: #e5f1ee;
+  --popover: #192e33;
+  --popover-foreground: #e5f1ee;
+  --primary: #36c58b;
+  --primary-foreground: #082b24;
+  --secondary: #1c3440;
+  --secondary-foreground: #a9d8ec;
+  --muted: #1b3033;
+  --muted-foreground: #9ab4b1;
+  --accent: #1d3840;
+  --accent-foreground: #b6e4f2;
+  --accent-soft: #193b36;
+  --border: #2a4345;
+  --border-color: #2a4345;
+  --input: #355253;
+  --ring: #42b6cd;
+  --orange-950: #b8efd8;
+  --orange-800: #58d5a0;
+  --orange-700: #45c98f;
+  --orange-500: #45b9d1;
+  --orange-400: #36c58b;
+  --orange-100: #193b36;
+  --orange-50: #1b3540;
+  --ink: #e5f1ee;
+  --text-soft: #a6bfbb;
+  --line: #2a4345;
+  --surface: #172a2e;
+  --text: #e5f1ee;
+  --muted-text: #9ab4b1;
+  --sidebar: #0b292c;
+  --sidebar-foreground: #e5f1ee;
+  --sidebar-primary: #45cf95;
+  --sidebar-primary-foreground: #092d25;
+  --sidebar-accent: #173b3c;
+  --sidebar-accent-foreground: #ddf5ee;
+  --sidebar-border: #244447;
+  --sidebar-ring: #45b9d1;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--background);
+}
+
+.admin-shell {
+  background:
+    radial-gradient(ellipse at 92% 0%, rgb(20 132 166 / 7%), transparent 32rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.admin-sidebar {
+  background: linear-gradient(180deg, #103c37 0%, #123943 100%);
+  border-color: #28564e;
+  box-shadow: 10px 0 34px rgb(18 57 67 / 7%);
+  color: #effaf6;
+}
+
+.brand {
+  gap: 12px;
+  border-color: #28564e;
+}
+
+.brand-mark {
+  flex: 0 0 auto;
+  background: linear-gradient(145deg, #d7f7e8, #d9f0f7);
+  color: #087f5b;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 54%);
+}
+
+.brand-name,
+.brand-name span {
+  color: #f3fbf8;
+}
+
+.brand-name {
+  font-size: 17px;
+  letter-spacing: -0.55px;
+  font-weight: 750;
+}
+
+.nav-label {
+  color: #8fb8ab;
+}
+
+.nav-item,
+.nav-group-toggle {
+  color: #c1d9d2;
+  border-radius: 9px;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.nav-item:hover,
+.nav-group-toggle:hover {
+  background: rgb(69 201 143 / 12%);
+  color: #f4fffb;
+}
+
+.nav-item.active,
+.nav-group-toggle.active {
+  background: linear-gradient(100deg, rgb(55 198 139 / 22%), rgb(69 185 209 / 13%));
+  box-shadow: inset 3px 0 #45cf95;
+  color: #9af0c8;
+}
+
+.nav-group-toggle.active {
+  box-shadow: none;
+}
+
+.sidebar-bottom {
+  border-color: #28564e;
+}
+
+.user-card {
+  color: #d9ebe5;
+}
+
+.user-card small {
+  color: #9abbb0;
+}
+
+.avatar {
+  background: linear-gradient(145deg, #c8f2dc, #c8eaf3);
+  color: #0b6850;
+}
+
+.topbar {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  background: rgb(255 255 255 / 92%);
+  border-color: var(--line);
+  box-shadow: 0 4px 18px rgb(21 68 58 / 4%);
+  backdrop-filter: blur(14px);
+}
+
+.breadcrumbs strong,
+.top-profile {
+  color: var(--foreground);
+}
+
+.page-heading h1,
+.panel-header h2,
+.modal-header h2,
+.auth-panel h1 {
+  color: var(--foreground);
+}
+
+.eyebrow {
+  color: #087f5b;
+}
+
+.muted {
+  color: var(--muted-foreground);
+}
+
+.kpi-card,
+.panel,
+.notification-panel,
+.modal-dialog,
+.crm-create-card,
+.crm-list-card,
+.pricing-form-card,
+.pricing-catalog {
+  background: var(--card);
+  border-color: var(--line);
+  border-radius: 14px;
+  box-shadow: 0 8px 26px rgb(21 68 58 / 6%);
+}
+
+.kpi-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgb(21 68 58 / 10%);
+}
+
+.kpi-icon.green,
+.kpi-icon.orange,
+.activity-icon.green,
+.activity-icon.orange,
+.cash-icon.wallet,
+.cash-icon.bank,
+.cash-icon.card {
+  background: var(--orange-100);
+  color: var(--orange-700);
+}
+
+.primary-button {
+  background: linear-gradient(110deg, #087f5b, #1484a6);
+  border-radius: 9px;
+  box-shadow: 0 5px 14px rgb(8 127 91 / 18%);
+  color: #fff;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.primary-button:hover {
+  background: linear-gradient(110deg, #066c4d, #116f91);
+  box-shadow: 0 7px 18px rgb(8 127 91 / 24%);
+  transform: translateY(-1px);
+}
+
+.outline-button,
+.date-button {
+  background: var(--card);
+  border-color: var(--line);
+  border-radius: 9px;
+  color: var(--foreground);
+}
+
+.outline-button:hover,
+.date-button:hover {
+  background: var(--accent);
+  border-color: #8bcdb7;
+  color: #087f5b;
+}
+
+.icon-button {
+  color: #587a73;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.icon-button:hover,
+.theme-toggle:hover {
+  background: var(--accent);
+  color: #087f5b;
+}
+
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--card);
+  color: #087f5b;
+}
+
+.module-toolbar,
+.cash-total,
+.modal-header {
+  border-color: var(--line);
+}
+
+.module-table {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+table th {
+  background: #edf5f2;
+  color: #55736b;
+}
+
+table td {
+  color: #3c5a52;
+}
+
+table th,
+table td {
+  border-color: var(--line);
+}
+
+table tbody tr:hover {
+  background: #f0f8f5;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.search-box:focus-within,
+.auth-panel input:focus {
+  border-color: #1484a6;
+  outline-color: rgb(20 132 166 / 22%);
+  box-shadow: 0 0 0 3px rgb(20 132 166 / 12%);
+}
+
+.auth-shell {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 14%, rgb(53 194 138 / 19%), transparent 34rem),
+    radial-gradient(ellipse at 88% 84%, rgb(20 132 166 / 18%), transparent 38rem),
+    #eef6f3;
+  color: var(--foreground);
+}
+
+.auth-panel {
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgb(255 255 255 / 84%);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 93%);
+  box-shadow: 0 26px 80px rgb(14 65 54 / 15%);
+  backdrop-filter: blur(18px);
+}
+
+.auth-panel > .brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #d7f7e8, #d9f0f7);
+  color: #087f5b;
+}
+
+.auth-panel label {
+  color: #35574e;
+}
+
+.auth-panel input {
+  border-color: var(--line);
+  border-radius: 9px;
+  background: #fbfdfc;
+  color: var(--foreground);
+}
+
+.auth-switch {
+  color: #087f5b;
+}
+
+.auth-theme-toggle {
+  position: absolute;
+  z-index: 2;
+  top: 24px;
+  right: 24px;
+}
+
+html.dark body {
+  background: var(--background);
+}
+
+html.dark .admin-shell {
+  background:
+    radial-gradient(ellipse at 92% 0%, rgb(69 185 209 / 7%), transparent 32rem),
+    var(--background);
+  color: var(--foreground);
+}
+
+html.dark .admin-sidebar {
+  background: linear-gradient(180deg, #0b292c 0%, #102d39 100%);
+  border-color: var(--sidebar-border);
+}
+
+html.dark .brand,
+html.dark .sidebar-bottom {
+  border-color: var(--sidebar-border);
+}
+
+html.dark .brand-name,
+html.dark .brand-name span {
+  color: var(--sidebar-foreground);
+}
+
+html.dark .nav-label {
+  color: #83b1a7;
+}
+
+html.dark .nav-item,
+html.dark .nav-group-toggle {
+  color: #b4cbc5;
+}
+
+html.dark .nav-item:hover,
+html.dark .nav-group-toggle:hover {
+  background: rgb(69 201 143 / 12%);
+  color: #f3fffb;
+}
+
+html.dark .nav-item.active,
+html.dark .nav-group-toggle.active {
+  background: linear-gradient(100deg, rgb(55 198 139 / 18%), rgb(69 185 209 / 12%));
+  color: #8ee6bd;
+}
+
+html.dark .topbar {
+  background: rgb(20 39 44 / 94%);
+  border-color: var(--line);
+}
+
+html.dark .top-profile,
+html.dark .breadcrumbs strong,
+html.dark .page-heading h1,
+html.dark .panel-header h2,
+html.dark .modal-header h2,
+html.dark .auth-panel h1,
+html.dark .kpi-info strong,
+html.dark .cash-total strong,
+html.dark .module-stats strong {
+  color: var(--foreground);
+}
+
+html.dark .eyebrow,
+html.dark .auth-switch,
+html.dark .text-button,
+html.dark .activity-footer {
+  color: #57d09b;
+}
+
+html.dark .kpi-card,
+html.dark .panel,
+html.dark .notification-panel,
+html.dark .modal-dialog,
+html.dark .crm-create-card,
+html.dark .crm-list-card,
+html.dark .pricing-form-card,
+html.dark .pricing-catalog {
+  background: var(--card);
+  border-color: var(--line);
+  color: var(--foreground);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
+}
+
+html.dark .module-table {
+  border-color: var(--line);
+  background: var(--card);
+}
+
+html.dark table th {
+  background: #1d363a;
+  color: #a7c3bd;
+}
+
+html.dark table td {
+  color: #c4d7d2;
+}
+
+html.dark table th,
+html.dark table td {
+  border-color: var(--line);
+}
+
+html.dark table tbody tr:hover {
+  background: #1a3436;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea,
+html.dark .search-box,
+html.dark .date-button,
+html.dark .outline-button {
+  background-color: #172a2e;
+  border-color: var(--line);
+  color: var(--foreground);
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #91aaa5;
+}
+
+html.dark .icon-button,
+html.dark .collapse-button,
+html.dark .mobile-menu,
+html.dark .mobile-close {
+  color: #a4c0ba;
+}
+
+html.dark .icon-button:hover,
+html.dark .theme-toggle:hover,
+html.dark .outline-button:hover,
+html.dark .date-button:hover {
+  background: var(--accent);
+  color: #75deb1;
+}
+
+html.dark .theme-toggle {
+  border-color: var(--line);
+  background: var(--card);
+  color: #55cbe0;
+}
+
+html.dark .auth-shell {
+  background:
+    radial-gradient(ellipse at 15% 14%, rgb(53 194 138 / 12%), transparent 34rem),
+    radial-gradient(ellipse at 88% 84%, rgb(20 132 166 / 14%), transparent 38rem),
+    #101f24;
+}
+
+html.dark .auth-panel {
+  border-color: #2a4345;
+  background: rgb(23 42 46 / 94%);
+  box-shadow: 0 26px 80px rgb(0 0 0 / 32%);
+}
+
+html.dark .auth-panel label {
+  color: #c1d8d1;
+}
+
+html.dark .auth-panel input {
+  background: #122327;
+  border-color: var(--line);
+  color: var(--foreground);
+}
+
+html.dark .auth-panel .muted {
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    padding-inline: 16px;
+  }
+
+  .dashboard-content {
+    padding: 22px 16px 34px;
+  }
+
+  .auth-panel {
+    padding: 28px 22px;
+  }
+
+  .auth-theme-toggle {
+    top: 16px;
+    right: 16px;
+  }
+}
+
+.proforma-payment-summary,
+.sale-note-fields,
+.sale-note-totals,
+.product-editor-grid,
+.users-branch-card,
+.users-form-grid {
+  border-color: var(--line);
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.proforma-payment-summary > div:last-child strong,
+.sale-note-sheet .sale-section-title,
+.product-editor-section-title,
+.users-form-section h3 {
+  color: var(--orange-700);
+}
+
+.sale-note-sheet .sale-section-title > span,
+.product-editor-section-title > span,
+.users-branch-icon,
+.product-kind-icon {
+  background: var(--orange-100);
+  color: var(--orange-700);
+}
+
+.sale-note-sheet .sale-note-fields input,
+.sale-note-sheet .sale-note-fields select,
+.sale-note-sheet .sale-note-observations textarea,
+.sale-note-sheet .sale-form-grid input,
+.sale-note-sheet .sale-form-grid select,
+.product-editor-modal .product-editor-grid input,
+.product-editor-modal .product-editor-grid select,
+.users-management-form input,
+.users-management-form select,
+.proforma-payment-form input,
+.proforma-payment-form select {
+  background: var(--card);
+  border-color: var(--line);
+  color: var(--foreground);
+}
+
+.sale-note-sheet .sale-note-fields input:focus,
+.sale-note-sheet .sale-note-fields select:focus,
+.sale-note-sheet .sale-note-observations textarea:focus,
+.sale-note-sheet .sale-form-grid input:focus,
+.sale-note-sheet .sale-form-grid select:focus,
+.product-editor-modal .product-editor-grid input:focus,
+.product-editor-modal .product-editor-grid select:focus,
+.users-management-form input:focus,
+.users-management-form select:focus,
+.proforma-payment-form input:focus,
+.proforma-payment-form select:focus {
+  border-color: var(--ring);
+  outline-color: color-mix(in srgb, var(--ring) 24%, transparent);
+}
+
+html.dark .proforma-payment-summary,
+html.dark .sale-note-fields,
+html.dark .sale-note-totals,
+html.dark .sale-note-payment .payment-method-option,
+html.dark .product-editor-sheet,
+html.dark .product-editor-grid,
+html.dark .product-kind-option,
+html.dark .users-branch-card,
+html.dark .users-form-grid {
+  border-color: var(--line);
+  background: var(--card);
+  color: var(--foreground);
+}
+
+html.dark .sale-note-sheet {
+  border-color: var(--line);
+  background: #172a2e;
+  color: var(--foreground);
+}
+
+html.dark .sale-note-editor-header {
+  border-bottom-color: #45cf95;
+}
+
+html.dark .sale-note-editor-brand strong,
+html.dark .sale-note-table .sale-note-item strong,
+html.dark .sale-note-info-cell strong,
+html.dark .product-kind-copy strong,
+html.dark .product-editor-grid label,
+html.dark .product-editor-grid label > span,
+html.dark .users-branch-card strong,
+html.dark .users-form-grid label,
+html.dark .users-form-grid label > span {
+  color: var(--foreground);
+}
+
+html.dark .sale-note-editor-brand strong span,
+html.dark .sale-note-editor-document strong,
+html.dark .sale-note-table .sale-note-number strong,
+html.dark .sale-note-sheet .sale-section-title,
+html.dark .sale-note-total-lines .sale-note-total-due,
+html.dark .sale-note-total-lines .sale-note-total-due strong,
+html.dark .product-editor-section-title,
+html.dark .users-form-section h3,
+html.dark .proforma-payment-summary > div:last-child strong {
+  color: #63d7a4;
+}
+
+html.dark .sale-note-editor-brand small,
+html.dark .sale-note-editor-document > span,
+html.dark .sale-note-editor-document small,
+html.dark .sale-note-helper,
+html.dark .sale-note-fields label,
+html.dark .sale-note-fields label > span,
+html.dark .sale-note-observations label,
+html.dark .sale-note-observations label > span,
+html.dark .sale-note-info-cell,
+html.dark .sale-note-table .sale-note-item small,
+html.dark .sale-note-empty,
+html.dark .sale-note-field-label,
+html.dark .sale-note-item-count,
+html.dark .product-editor-help,
+html.dark .product-editor-grid label > small,
+html.dark .product-kind-copy small,
+html.dark .product-editor-footer > p,
+html.dark .users-branch-hint,
+html.dark .users-branch-card small,
+html.dark .users-form-section > p,
+html.dark .users-form-grid label > small,
+html.dark .proforma-payment-summary span,
+html.dark .proforma-payment-fields label > span,
+html.dark .proforma-payment-fields label,
+html.dark .proforma-payment-hint {
+  color: var(--muted-foreground);
+}
+
+html.dark .sale-note-sheet .sale-note-fields input,
+html.dark .sale-note-sheet .sale-note-fields select,
+html.dark .sale-note-sheet .sale-note-observations textarea,
+html.dark .sale-note-sheet .sale-form-grid input,
+html.dark .sale-note-sheet .sale-form-grid select,
+html.dark .product-editor-modal .product-editor-grid input,
+html.dark .product-editor-modal .product-editor-grid select,
+html.dark .users-management-form input,
+html.dark .users-management-form select,
+html.dark .proforma-payment-form input,
+html.dark .proforma-payment-form select {
+  background: #122327;
+  border-color: var(--line);
+  color: var(--foreground);
+}
+
+html.dark .sale-note-table th {
+  background: #1d3840;
+  color: #b6e4f2;
+}
+
+html.dark .sale-note-table td {
+  border-bottom-color: var(--line);
+  color: #c4d7d2;
+}
+
+html.dark .sale-note-payment .payment-method-option:hover,
+html.dark .sale-note-payment .payment-method-option.is-selected,
+html.dark .product-kind-option.is-selected {
+  border-color: #45cf95;
+  background: #193b36;
+  color: #63d7a4;
+}
+
+html.dark .sale-note-sheet .sale-note-fields input:focus,
+html.dark .sale-note-sheet .sale-note-fields select:focus,
+html.dark .sale-note-sheet .sale-note-observations textarea:focus,
+html.dark .sale-note-sheet .sale-form-grid input:focus,
+html.dark .sale-note-sheet .sale-form-grid select:focus,
+html.dark .product-editor-modal .product-editor-grid input:focus,
+html.dark .product-editor-modal .product-editor-grid select:focus,
+html.dark .users-management-form input:focus,
+html.dark .users-management-form select:focus,
+html.dark .proforma-payment-form input:focus,
+html.dark .proforma-payment-form select:focus {
+  border-color: var(--ring);
+  outline-color: rgb(69 185 209 / 24%);
+}
+
+html.dark .sale-note-sheet .sale-section-title > span,
+html.dark .product-editor-section-title > span,
+html.dark .product-kind-icon,
+html.dark .users-branch-icon {
+  background: #193b36;
+  color: #63d7a4;
+}
+
+html.dark .sale-note-balance,
+html.dark .proforma-payment-balance.has-balance,
+html.dark .product-editor-notice {
+  border-color: #41656a;
+  background: #1b3540;
+  color: #b6e4f2;
+}
+
+html.dark .sale-note-balance strong,
+html.dark .sale-note-payment-hint svg,
+html.dark .product-editor-notice strong,
+html.dark .product-editor-notice svg,
+html.dark .proforma-payment-balance.has-balance strong {
+  color: #71d5e5;
+}
+
+html.dark .sale-note-total-lines,
+html.dark .sale-note-sheet .sale-invoice-checkbox {
+  color: var(--muted-foreground);
+}
+
+html.dark .sale-note-total-lines strong,
+html.dark .proforma-payment-summary strong {
+  color: var(--foreground);
+}
+
+html.dark .sale-note-total-lines .sale-note-total-due,
+html.dark .sale-note-editor-header,
+html.dark .product-editor-footer,
+html.dark .users-form-actions,
+html.dark .proforma-payment-form .users-form-actions {
+  border-color: var(--line);
+}
+
+html.dark .users-form-actions,
+html.dark .product-editor-footer {
+  border-top-color: var(--line);
+}
+
+html.dark .users-branch-card,
+html.dark .users-form-grid {
+  background: #15292d;
+}
+
+html.dark .proforma-payment-form input:disabled {
+  background: #1b3033;
+  color: var(--muted-foreground);
+}
+
+html.dark .proforma-payment-balance {
+  border-color: #315a49;
+  background: #193b36;
+  color: #b8efd8;
+}
+
+html.dark .proforma-payment-error,
+html.dark .sale-note-totals .sale-note-due-row {
+  color: #ff9a9a;
+}

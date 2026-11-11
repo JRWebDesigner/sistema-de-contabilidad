@@ -23,7 +23,7 @@ export type OperationNotePdfData = {
   }
 }
 
-const ORANGE = '#ff7900'
+const ORANGE = '#087f5b'
 const BORDER = '#eadfd2'
 
 const styles = StyleSheet.create({
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     marginTop: 22,
     marginBottom: 10,
-    color: '#9b4b00',
+    color: '#1484a6',
     fontSize: 11,
     fontWeight: 700,
   },
@@ -170,15 +170,15 @@ function OperationNoteDocument({ note }: { note: OperationNotePdfData }) {
   }
   return (
     <Document
-      title={`${note.title} ${note.number} · Businessman S.R.L.`}
-      author="Businessman S.R.L."
+      title={`${note.title} ${note.number} · Importlilimlab`}
+      author="Importlilimlab"
       language="es"
     >
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.header} fixed>
           <View>
             <Text style={styles.brand}>
-              Businessman <Text style={styles.brandSuffix}>S.R.L.</Text>
+              Importlilimlab
             </Text>
             <Text style={[styles.branch, styles.branchFirst]}>{note.branchName}</Text>
             {note.branchAddress ? <Text style={styles.branch}>{note.branchAddress}</Text> : null}
@@ -258,7 +258,7 @@ function OperationNoteDocument({ note }: { note: OperationNotePdfData }) {
         <View style={styles.signatures} wrap={false}>
           <View style={styles.signature}>
             <View style={styles.signatureLine} />
-            <Text style={styles.signatureLabel}>Businessman S.R.L.</Text>
+            <Text style={styles.signatureLabel}>Importlilimlab</Text>
             <Text style={styles.signatureSubtitle}>Firma del representante</Text>
           </View>
           <View style={styles.signature}>
@@ -269,7 +269,7 @@ function OperationNoteDocument({ note }: { note: OperationNotePdfData }) {
         </View>
 
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Valores expresados en bolivianos (Bs)</Text>
+          <Text>Importlilimlab · Valores expresados en bolivianos (Bs)</Text>
           <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

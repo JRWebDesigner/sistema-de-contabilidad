@@ -255,7 +255,7 @@ export default function SubscriptionsModule() {
       <Modal
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        page="Servicios · Businessman S.R.L."
+        page="Servicios · Importlilimlab"
         title="Nuevo servicio"
         description="Completa la constancia con el cliente, el servicio contratado y las condiciones del pago inicial."
         className="sale-modal"
@@ -270,7 +270,7 @@ export default function SubscriptionsModule() {
             <div className="sale-note-sheet">
               <header className="sale-note-editor-header">
                 <div className="sale-note-editor-brand">
-                  <strong>Businessman <span>S.R.L.</span></strong>
+                  <strong>Importlilimlab</strong>
                   <small>Contratación de servicios</small>
                 </div>
                 <div className="sale-note-editor-document">

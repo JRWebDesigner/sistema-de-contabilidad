@@ -35,16 +35,16 @@ const dateFormat = new Intl.DateTimeFormat('es-BO', {
 
 const styles = StyleSheet.create({
   page: { paddingTop: 34, paddingHorizontal: 34, paddingBottom: 44, color: '#332719', fontFamily: 'Helvetica', fontSize: 8 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#ff7900' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#087f5b' },
   brand: { fontSize: 18, fontWeight: 700 },
   subtitle: { marginTop: 4, color: '#75685a', fontSize: 8 },
-  title: { maxWidth: '60%', color: '#9b4b00', fontSize: 15, fontWeight: 700, textAlign: 'right' },
+  title: { maxWidth: '60%', color: '#087f5b', fontSize: 15, fontWeight: 700, textAlign: 'right' },
   metadata: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 8, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: '#eadfd2' },
   metadataItem: { width: '48%' },
   metadataLabel: { color: '#897966', fontSize: 6, textTransform: 'uppercase' },
   metadataValue: { marginTop: 3, color: '#332719', fontSize: 8 },
   table: { marginTop: 12 },
-  tableHeader: { flexDirection: 'row', backgroundColor: '#ff7900' },
+  tableHeader: { flexDirection: 'row', backgroundColor: '#087f5b' },
   headerCell: { paddingVertical: 6, paddingHorizontal: 4, color: '#24170b', fontSize: 7, fontWeight: 700 },
   row: { flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#eadfd2' },
   alternateRow: { backgroundColor: '#fff8f0' },
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   concept: { width: '34%' },
   amount: { width: '10%' },
   detail: { marginTop: 3, color: '#75685a', fontSize: 6.5, lineHeight: 1.3 },
-  totals: { flexDirection: 'row', marginTop: 4, backgroundColor: '#fff2e6', borderTopWidth: 1, borderTopColor: '#ff7900' },
+  totals: { flexDirection: 'row', marginTop: 4, backgroundColor: '#e5f4ed', borderTopWidth: 1, borderTopColor: '#1484a6' },
   totalLabel: { width: '70%', padding: 6, fontWeight: 700, textAlign: 'right' },
   totalAmount: { width: '10%', padding: 6, fontSize: 7, textAlign: 'right' },
   footer: { position: 'absolute', right: 34, bottom: 20, left: 34, flexDirection: 'row', justifyContent: 'space-between', paddingTop: 6, borderTopWidth: 0.5, borderTopColor: '#eadfd2', color: '#897966', fontSize: 7 },
@@ -69,7 +69,7 @@ function AccountStatementDocument({ statement }: { statement: AccountStatementPd
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.brand}>Businessman S.R.L.</Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             <Text style={styles.subtitle}>Estados de cuenta · Bolivia</Text>
           </View>
           <Text style={styles.title}>{statement.title}</Text>
@@ -133,7 +133,7 @@ function AccountStatementDocument({ statement }: { statement: AccountStatementPd
         </View>
 
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Valores expresados en bolivianos (Bs)</Text>
+          <Text>Importlilimlab · Valores expresados en bolivianos (Bs)</Text>
           <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingBottom: 16,
     borderBottomWidth: 2,
-    borderBottomColor: '#ff7900',
+    borderBottomColor: '#087f5b',
   },
   brand: { color: '#332719', fontSize: 20, fontWeight: 700 },
-  brandSuffix: { color: '#9b4b00', fontSize: 12 },
+  brandSuffix: { color: '#1484a6', fontSize: 12 },
   brandCaption: { marginTop: 4, color: '#897966', fontSize: 7, letterSpacing: 1 },
   titleBlock: { alignItems: 'flex-end' },
   documentLabel: { color: '#897966', fontSize: 8, textTransform: 'uppercase', letterSpacing: 1 },
@@ -76,11 +76,11 @@ const styles = StyleSheet.create({
   metadataItem: { width: '45%' },
   label: { color: '#897966', fontSize: 7, textTransform: 'uppercase', letterSpacing: 0.5 },
   value: { marginTop: 4, color: '#332719', fontSize: 9 },
-  sectionTitle: { marginTop: 22, marginBottom: 9, color: '#9b4b00', fontSize: 10, fontWeight: 700 },
+  sectionTitle: { marginTop: 22, marginBottom: 9, color: '#1484a6', fontSize: 10, fontWeight: 700 },
   table: { marginTop: 8 },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#ff7900',
+    backgroundColor: '#087f5b',
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
   },
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     paddingVertical: 9,
     paddingHorizontal: 10,
-    backgroundColor: '#ff7900',
+    backgroundColor: '#087f5b',
     borderRadius: 3,
   },
   totalLabel: { color: '#4c4033', fontSize: 9 },
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#fff8f0',
     borderLeftWidth: 3,
-    borderLeftColor: '#ff7900',
+    borderLeftColor: '#1484a6',
   },
   notesLabel: { marginBottom: 5, color: '#897966', fontSize: 7, textTransform: 'uppercase' },
   notesText: { color: '#4c4033', fontSize: 8, lineHeight: 1.4 },
@@ -154,11 +154,11 @@ function ProformaDocument({ proforma }: { proforma: ProformaPdfData }) {
   const totalWidth = '17%'
 
   return (
-    <Document title={`Proforma ${proforma.number} · Businessman S.R.L.`} author="Businessman S.R.L." language="es">
+    <Document title={`Proforma ${proforma.number} · Importlilimlab`} author="Importlilimlab" language="es">
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.header} fixed>
           <View>
-            <Text style={styles.brand}>Businessman <Text style={styles.brandSuffix}>S.R.L.</Text></Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             <Text style={styles.brandCaption}>COTIZACIÓN COMERCIAL</Text>
           </View>
           <View style={styles.titleBlock}>
@@ -219,7 +219,7 @@ function ProformaDocument({ proforma }: { proforma: ProformaPdfData }) {
         </View>
 
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Precios expresados en bolivianos (Bs)</Text>
+          <Text>Importlilimlab · Precios expresados en bolivianos (Bs)</Text>
           <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

@@ -64,21 +64,21 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingBottom: 14,
     borderBottomWidth: 2,
-    borderBottomColor: '#ff7900',
+    borderBottomColor: '#087f5b',
   },
   brand: { color: '#332719', fontSize: 19, fontWeight: 700 },
-  brandSuffix: { color: '#ff7900', fontSize: 12 },
+  brandSuffix: { color: '#1484a6', fontSize: 12 },
   branch: { marginTop: 5, color: '#75685a', fontSize: 8 },
   titleBlock: { alignItems: 'flex-end' },
-  title: { color: '#ff7900', fontSize: 13, fontWeight: 700 },
+  title: { color: '#087f5b', fontSize: 13, fontWeight: 700 },
   copyType: {
     marginTop: 7,
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderWidth: 1,
-    borderColor: '#ff7900',
+    borderColor: '#1484a6',
     borderRadius: 3,
-    color: '#9b4b00',
+    color: '#087f5b',
     fontSize: 9,
     fontWeight: 700,
   },
@@ -96,9 +96,9 @@ const styles = StyleSheet.create({
   metadataItem: { width: '45%' },
   label: { color: '#897966', fontSize: 7, textTransform: 'uppercase' },
   value: { marginTop: 4, color: '#332719', fontSize: 9 },
-  sectionTitle: { marginTop: 20, marginBottom: 8, color: '#9b4b00', fontSize: 10, fontWeight: 700 },
+  sectionTitle: { marginTop: 20, marginBottom: 8, color: '#1484a6', fontSize: 10, fontWeight: 700 },
   table: { marginTop: 5 },
-  tableHeader: { flexDirection: 'row', backgroundColor: '#ff7900' },
+  tableHeader: { flexDirection: 'row', backgroundColor: '#087f5b' },
   headerCell: { paddingVertical: 7, paddingHorizontal: 5, color: '#24170b', fontSize: 7, fontWeight: 700 },
   row: { flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#eadfd2' },
   alternateRow: { backgroundColor: '#fff8f0' },
@@ -114,9 +114,9 @@ const styles = StyleSheet.create({
   },
   totalLabel: { color: '#675747', fontSize: 9 },
   totalValue: { color: '#332719', fontSize: 9, textAlign: 'right' },
-  grandTotal: { marginTop: 4, padding: 9, backgroundColor: '#ff7900', borderRadius: 3 },
+  grandTotal: { marginTop: 4, padding: 9, backgroundColor: '#087f5b', borderRadius: 3 },
   grandTotalText: { color: '#24170b', fontSize: 11, fontWeight: 700 },
-  notes: { marginTop: 20, padding: 10, backgroundColor: '#fff8f0', borderLeftWidth: 3, borderLeftColor: '#ff7900' },
+  notes: { marginTop: 20, padding: 10, backgroundColor: '#edf6f7', borderLeftWidth: 3, borderLeftColor: '#1484a6' },
   notesLabel: { marginBottom: 4, color: '#897966', fontSize: 7, textTransform: 'uppercase' },
   notesText: { color: '#4c4033', fontSize: 8, lineHeight: 1.4 },
   footer: {
@@ -145,11 +145,11 @@ function Field({ label, value }: { label: string; value: string }) {
 
 function SaleNoteDocument({ note }: { note: SaleNotePdfData }) {
   return (
-    <Document title={`Nota de venta ${note.number} ${note.copyType} · Businessman S.R.L.`} author="Businessman S.R.L." language="es">
+    <Document title={`Nota de venta ${note.number} ${note.copyType} · Importlilimlab`} author="Importlilimlab" language="es">
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.header} fixed>
           <View>
-            <Text style={styles.brand}>Businessman <Text style={styles.brandSuffix}>S.R.L.</Text></Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             {note.branch && <Text style={styles.branch}>{note.branch.name}{note.branch.address ? ` · ${note.branch.address}` : ''}{note.branch.phone ? ` · ${note.branch.phone}` : ''}</Text>}
           </View>
           <View style={styles.titleBlock}>
@@ -219,7 +219,7 @@ function SaleNoteDocument({ note }: { note: SaleNotePdfData }) {
         </View>
 
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Precios expresados en bolivianos (Bs)</Text>
+          <Text>Importlilimlab · Precios expresados en bolivianos (Bs)</Text>
           <Text render={({ pageNumber, totalPages }) => `PÃ¡gina ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

@@ -787,7 +787,9 @@ export default function AdminSystem() {
   const [branchError, setBranchError] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("businessman-theme");
+    const savedTheme =
+      window.localStorage.getItem("importlilimlab-theme") ??
+      window.localStorage.getItem("businessman-theme");
     const darkMode = savedTheme
       ? savedTheme === "dark"
       : window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -799,7 +801,7 @@ export default function AdminSystem() {
     const darkMode = !isDarkMode;
     document.documentElement.classList.toggle("dark", darkMode);
     document.documentElement.classList.toggle("light", !darkMode);
-    window.localStorage.setItem("businessman-theme", darkMode ? "dark" : "light");
+    window.localStorage.setItem("importlilimlab-theme", darkMode ? "dark" : "light");
     setIsDarkMode(darkMode);
   }
   useEffect(() => {
@@ -901,8 +903,11 @@ export default function AdminSystem() {
         className={`admin-sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}
       >
         <div className="brand">
+          <span className="brand-mark" aria-hidden="true">
+            <Building2 size={19} />
+          </span>
           <span className="brand-name">
-            Businessman <span>S.R.L.</span>
+            Importlilimlab
           </span>
           <button
             className="mobile-close"

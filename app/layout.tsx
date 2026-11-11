@@ -3,33 +3,20 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Businessman S.R.L. — Gestión de tu negocio',
-  description: 'Sistema administrativo de Businessman S.R.L. para ventas, inventario, finanzas y clientes.',
+  title: 'Importlilimlab — Gestión empresarial',
+  description: 'Sistema de gestión empresarial Importlilimlab para ventas, inventario, finanzas y clientes.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    apple: '/icon.svg',
   },
 }
 
 export const viewport: Viewport = {
   colorScheme: 'light dark',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
+    { media: '(prefers-color-scheme: light)', color: '#f3f8f6' },
+    { media: '(prefers-color-scheme: dark)', color: '#101f24' },
   ],
 }
 

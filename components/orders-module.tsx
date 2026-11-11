@@ -493,7 +493,7 @@ export default function OrdersModule() {
             <div className="sale-note-sheet">
               <header className="sale-note-editor-header">
                 <div className="sale-note-editor-brand">
-                  <strong>Businessman <span>S.R.L.</span></strong>
+                  <strong>Importlilimlab</strong>
                   <small>Pedido de productos y servicios</small>
                 </div>
                 <div className="sale-note-editor-document">

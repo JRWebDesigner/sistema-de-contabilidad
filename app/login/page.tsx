@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { LockKeyhole, LogIn, UserPlus } from "lucide-react";
+import { FormEvent, useEffect, useState } from "react";
+import { LockKeyhole, LogIn, Moon, Sun, UserPlus } from "lucide-react";
 
 export default function LoginPage() {
   const [setup, setSetup] = useState(false);
@@ -13,6 +13,27 @@ export default function LoginPage() {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme =
+      window.localStorage.getItem("importlilimlab-theme") ??
+      window.localStorage.getItem("businessman-theme");
+    const darkMode = savedTheme
+      ? savedTheme === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.classList.toggle("dark", darkMode);
+    document.documentElement.classList.toggle("light", !darkMode);
+    setIsDarkMode(darkMode);
+  }, []);
+
+  function toggleTheme() {
+    const darkMode = !isDarkMode;
+    document.documentElement.classList.toggle("dark", darkMode);
+    document.documentElement.classList.toggle("light", !darkMode);
+    window.localStorage.setItem("importlilimlab-theme", darkMode ? "dark" : "light");
+    setIsDarkMode(darkMode);
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,11 +71,21 @@ export default function LoginPage() {
 
   return (
     <main className="auth-shell">
+      <button
+        className="icon-button theme-toggle auth-theme-toggle"
+        type="button"
+        onClick={toggleTheme}
+        aria-label={isDarkMode ? "Activar modo claro" : "Activar modo oscuro"}
+        title={isDarkMode ? "Activar modo claro" : "Activar modo oscuro"}
+        aria-pressed={isDarkMode}
+      >
+        {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
       <section className="auth-panel">
         <span className="brand-mark">
           <LockKeyhole size={20} />
         </span>
-        <p className="eyebrow">Businessman S.R.L.</p>
+        <p className="eyebrow">Importlilimlab</p>
         <h1>{setup ? "Crear administrador" : "Iniciar sesión"}</h1>
         <p className="muted">
           {setup

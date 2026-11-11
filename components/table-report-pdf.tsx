@@ -12,17 +12,17 @@ export type TableReportPdfData = {
 
 const styles = StyleSheet.create({
   page: { paddingTop: 34, paddingHorizontal: 34, paddingBottom: 44, color: '#332719', fontFamily: 'Helvetica', fontSize: 8 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#ff7900' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#087f5b' },
   brand: { color: '#332719', fontSize: 18, fontWeight: 700 },
   subtitle: { marginTop: 4, color: '#75685a', fontSize: 8 },
-  title: { maxWidth: '60%', color: '#9b4b00', fontSize: 15, fontWeight: 700, textAlign: 'right' },
+  title: { maxWidth: '60%', color: '#1484a6', fontSize: 15, fontWeight: 700, textAlign: 'right' },
   table: { marginTop: 14 },
-  headerRow: { flexDirection: 'row', backgroundColor: '#ff7900' },
+  headerRow: { flexDirection: 'row', backgroundColor: '#087f5b' },
   headerCell: { paddingVertical: 6, paddingHorizontal: 5, color: '#24170b', fontSize: 7, fontWeight: 700 },
   row: { flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#eadfd2' },
   alternateRow: { backgroundColor: '#fff8f0' },
-  sectionRow: { marginTop: 4, backgroundColor: '#fff2e6', borderTopWidth: 1, borderTopColor: '#ff7900' },
-  totalRow: { backgroundColor: '#fff2e6', borderTopWidth: 1, borderTopColor: '#ff7900' },
+  sectionRow: { marginTop: 4, backgroundColor: '#e5f4ed', borderTopWidth: 1, borderTopColor: '#1484a6' },
+  totalRow: { backgroundColor: '#e5f4ed', borderTopWidth: 1, borderTopColor: '#1484a6' },
   cell: { paddingVertical: 6, paddingHorizontal: 5, color: '#4c4033', fontSize: 7.5 },
   emphasis: { fontWeight: 700 },
   note: { marginTop: 14, color: '#75685a', fontSize: 8, lineHeight: 1.4 },
@@ -34,11 +34,11 @@ function TableReportDocument({ report }: { report: TableReportPdfData }) {
   const columnWidth = `${100 / columnCount}%`
 
   return (
-    <Document title={`${report.title} · Businessman S.R.L.`} author="Businessman S.R.L." language="es">
+    <Document title={`${report.title} · Importlilimlab`} author="Importlilimlab" language="es">
       <Page size="A4" orientation={columnCount > 4 ? 'landscape' : 'portrait'} style={styles.page}>
         <View style={styles.header} fixed>
           <View>
-            <Text style={styles.brand}>Businessman S.R.L.</Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             <Text style={styles.subtitle}>SISTEMA ADMINISTRATIVO</Text>
           </View>
           <Text style={styles.title}>{report.title}</Text>
@@ -85,7 +85,7 @@ function TableReportDocument({ report }: { report: TableReportPdfData }) {
         </View>
         {report.note && <Text style={styles.note}>{report.note}</Text>}
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Valores expresados en bolivianos (Bs)</Text>
+          <Text>Importlilimlab · Valores expresados en bolivianos (Bs)</Text>
           <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

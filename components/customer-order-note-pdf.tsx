@@ -44,20 +44,20 @@ const statusLabels = {
 
 const styles = StyleSheet.create({
   page: { paddingTop: 38, paddingHorizontal: 40, paddingBottom: 52, color: '#332719', fontFamily: 'Helvetica', fontSize: 9 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 14, borderBottomWidth: 2, borderBottomColor: '#ff7900' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 14, borderBottomWidth: 2, borderBottomColor: '#087f5b' },
   brand: { fontSize: 20, fontWeight: 700 },
   brandCaption: { marginTop: 4, color: '#897966', fontSize: 7, letterSpacing: 1 },
   titleBlock: { alignItems: 'flex-end' },
-  title: { color: '#9b4b00', fontSize: 15, fontWeight: 700 },
+  title: { color: '#087f5b', fontSize: 15, fontWeight: 700 },
   orderNumber: { marginTop: 5, fontSize: 10, fontWeight: 700 },
   status: { marginTop: 5, color: '#75685a', fontSize: 7 },
   metadata: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 24, rowGap: 12, marginTop: 18, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: '#eadfd2' },
   metadataItem: { width: '45%' },
   label: { color: '#897966', fontSize: 7, textTransform: 'uppercase' },
   value: { marginTop: 4, color: '#332719', fontSize: 9 },
-  sectionTitle: { marginTop: 20, marginBottom: 8, color: '#9b4b00', fontSize: 10, fontWeight: 700 },
+  sectionTitle: { marginTop: 20, marginBottom: 8, color: '#1484a6', fontSize: 10, fontWeight: 700 },
   table: { marginTop: 5 },
-  tableHeader: { flexDirection: 'row', backgroundColor: '#ff7900' },
+  tableHeader: { flexDirection: 'row', backgroundColor: '#087f5b' },
   headerCell: { paddingVertical: 7, paddingHorizontal: 5, color: '#24170b', fontSize: 7, fontWeight: 700 },
   row: { flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#eadfd2' },
   alternateRow: { backgroundColor: '#fff8f0' },
@@ -72,9 +72,9 @@ const styles = StyleSheet.create({
   totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5, borderBottomWidth: 0.5, borderBottomColor: '#eadfd2' },
   totalLabel: { color: '#4c4033', fontSize: 9 },
   totalValue: { color: '#332719', fontSize: 9, textAlign: 'right' },
-  grandTotal: { marginTop: 4, padding: 9, backgroundColor: '#ff7900', borderRadius: 3 },
+  grandTotal: { marginTop: 4, padding: 9, backgroundColor: '#087f5b', borderRadius: 3 },
   grandTotalText: { color: '#24170b', fontSize: 11, fontWeight: 700 },
-  notes: { marginTop: 18, padding: 10, backgroundColor: '#fff8f0', borderLeftWidth: 3, borderLeftColor: '#ff7900' },
+  notes: { marginTop: 18, padding: 10, backgroundColor: '#edf6f7', borderLeftWidth: 3, borderLeftColor: '#1484a6' },
   notesLabel: { marginBottom: 4, color: '#897966', fontSize: 7, textTransform: 'uppercase' },
   notesText: { color: '#4c4033', fontSize: 8, lineHeight: 1.4 },
   signatures: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 58 },
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
 
 function CustomerOrderDocument({ order }: { order: CustomerOrderPdfData }) {
   return (
-    <Document title={`Nota de pedido ${order.number} · Businessman S.R.L.`} author="Businessman S.R.L." language="es">
+    <Document title={`Nota de pedido ${order.number} · Importlilimlab`} author="Importlilimlab" language="es">
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.brand}>Businessman S.R.L.</Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             <Text style={styles.brandCaption}>NOTA DE PEDIDO</Text>
           </View>
           <View style={styles.titleBlock}>
@@ -189,7 +189,7 @@ function CustomerOrderDocument({ order }: { order: CustomerOrderPdfData }) {
         </View>
 
         <View style={styles.footer} fixed>
-          <Text>Businessman S.R.L. · Documento de pedido; no constituye factura</Text>
+          <Text>Importlilimlab · Documento de pedido; no constituye factura</Text>
           <Text>Pedido {order.number}</Text>
         </View>
       </Page>

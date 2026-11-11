@@ -18,7 +18,7 @@ export type PaymentReceiptPdfData = {
 
 const styles = StyleSheet.create({
   page: { padding: 38, color: '#332719', fontFamily: 'Helvetica', fontSize: 9 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#ff7900' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#087f5b' },
   brand: { fontSize: 18, fontWeight: 700 },
   muted: { marginTop: 4, color: '#75685a', fontSize: 8 },
   title: { marginTop: 18, marginBottom: 12, color: '#332719', fontSize: 15, fontWeight: 700 },
@@ -68,7 +68,7 @@ function PaymentReceiptDocument({ receipt, printedAt }: { receipt: PaymentReceip
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.brand}>Businessman S.R.L.</Text>
+            <Text style={styles.brand}>Importlilimlab</Text>
             {receipt.branchName && <Text style={styles.muted}>{receipt.branchName}</Text>}
           </View>
           <View>
@@ -108,7 +108,7 @@ function PaymentReceiptDocument({ receipt, printedAt }: { receipt: PaymentReceip
           Elaborado por: {receipt.recordedByAlias}{'\n'}
           Impreso: {timestamp(printedAt)}
         </Text>
-        <Text style={styles.footer} fixed>Businessman S.R.L. · Comprobante de pago</Text>
+        <Text style={styles.footer} fixed>Importlilimlab · Comprobante de pago</Text>
       </Page>
     </Document>
   )
