@@ -440,7 +440,7 @@ export default function OrdersModule() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={8}>Cargando pedidos...</td></tr>
+                <tr><td colSpan={8} className="database-loading">Cargando pedidos...</td></tr>
               ) : visibleOrders.length === 0 ? (
                 <tr><td colSpan={8}>No hay pedidos para mostrar.</td></tr>
               ) : visibleOrders.map((order) => (

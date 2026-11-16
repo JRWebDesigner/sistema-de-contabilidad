@@ -17,7 +17,16 @@ type Receivable = {
   balance: string;
   dueDate: string;
   customer: { id: string; name: string; document: string };
-  sale: { number: string; createdAt: string; paymentMethod: string };
+  sale: {
+    number: string;
+    createdAt: string;
+    paymentMethod: string;
+    notes: string | null;
+    items: Array<{
+      quantity: number;
+      product: { name: string; type: "PRODUCT" | "SERVICE" };
+    }>;
+  };
   payments: Array<{
     id: string;
     amount: string;
@@ -188,7 +197,14 @@ export default function ReceivablesModule() {
   ));
   const filteredReceivables = receivables.filter((item) => {
     const search = query.trim().toLocaleLowerCase();
-    const matchesQuery = !search || [item.customer.name, item.customer.document, item.sale.number, item.number]
+    const matchesQuery = !search || [
+      item.customer.name,
+      item.customer.document,
+      item.sale.number,
+      item.number,
+      item.sale.notes ?? "",
+      ...item.sale.items.map(({ product }) => product.name),
+    ]
       .some((value) => value.toLocaleLowerCase().includes(search));
     const saleDate = new Date(item.sale.createdAt).toISOString().slice(0, 10);
     const matchesDates = (!dateFrom || saleDate >= dateFrom) && (!dateTo || saleDate <= dateTo);
@@ -381,7 +397,7 @@ export default function ReceivablesModule() {
         </label>
         <label>
           Buscar
-          <input aria-label="Buscar cuentas por cobrar" placeholder="Factura, documento o cliente..." value={query} onChange={(event) => setQuery(event.target.value)} />
+          <input aria-label="Buscar cuentas por cobrar" placeholder="Factura, cliente, concepto o producto..." value={query} onChange={(event) => setQuery(event.target.value)} />
         </label>
         <label>
           Cliente
@@ -399,8 +415,9 @@ export default function ReceivablesModule() {
             <thead>
               <tr>
                 <th>Item</th>
-                <th>Nro. factura</th>
-                <th>Documento</th>
+                <th>Nro. Venta</th>
+                <th>Productos / servicios</th>
+                <th>Concepto</th>
                 <th>Crédito</th>
                 <th>Fecha</th>
                 <th>Cliente</th>
@@ -411,7 +428,7 @@ export default function ReceivablesModule() {
             <tbody>
               {filteredReceivables.length === 0 ? (
                 <tr>
-                  <td colSpan={8}>{receivables.length ? "No hay resultados para los filtros seleccionados." : "No hay cuentas por cobrar."}</td>
+                  <td colSpan={9}>{receivables.length ? "No hay resultados para los filtros seleccionados." : "No hay cuentas por cobrar."}</td>
                 </tr>
               ) : (
                 filteredReceivables.map((item, index) => (
@@ -419,7 +436,19 @@ export default function ReceivablesModule() {
                   <tr className={Number(item.balance) > 0 ? "receivable-debt-row" : ""}>
                     <td>{index + 1}</td>
                     <td>{item.sale.number}</td>
-                    <td>{item.customer.document || "—"}</td>
+                    <td>
+                      <span
+                        className="sale-concept"
+                        title={item.sale.items.map(({ quantity, product }) => `${quantity} × ${product.name}`).join(", ")}
+                      >
+                        {item.sale.items.map(({ quantity, product }) => `${quantity} × ${product.name}`).join(", ") || "—"}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="sale-concept" title={item.sale.notes ?? undefined}>
+                        {item.sale.notes?.trim() || "—"}
+                      </span>
+                    </td>
                     <td>Sí</td>
                     <td>{new Date(item.sale.createdAt).toLocaleDateString("es-BO")}</td>
                     <td>{item.customer.name}</td>
@@ -466,7 +495,7 @@ export default function ReceivablesModule() {
                   </tr>
                   {historyOpen === item.id && (
                     <tr key={`${item.id}-payments`}>
-                      <td colSpan={8}>
+                      <td colSpan={9}>
                         {item.payments.length === 0 ? "Esta cuenta no tiene abonos." : (
                           <div className="table-scroll">
                             <table>

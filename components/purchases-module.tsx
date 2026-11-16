@@ -618,7 +618,7 @@ export default function PurchasesModule() {
             </thead>
             <tbody>
               {isLoadingHistory ? (
-                <tr><td colSpan={10}>Cargando historial de compras...</td></tr>
+                <tr><td colSpan={10} className="database-loading">Cargando historial de compras...</td></tr>
               ) : purchases.length === 0 ? (
                 <tr><td colSpan={10}>Todavía no hay compras registradas.</td></tr>
               ) : (

@@ -113,7 +113,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const product = await prisma.$transaction(async (transaction) => {
+    const product = await serializableTransaction(async (transaction) => {
       const createdProduct = await transaction.product.create({
         data: {
           ...payload.data,
@@ -164,7 +164,7 @@ export async function POST(request: Request) {
         where: { id: createdProduct.id },
         include: { category: true },
       })
-    })
+    }, { maxWait: 10_000, timeout: 15_000 })
 
     return NextResponse.json(
       {
@@ -175,13 +175,24 @@ export async function POST(request: Request) {
       { status: 201 },
     )
   } catch (error) {
+    const knownInputError = error instanceof Error && (
+      error.message.includes('Unique constraint')
+      || error.message.includes('Foreign key constraint')
+      || error.message === 'ACCOUNTING_PERIOD_CLOSED'
+      || error.message === 'ACCOUNTING_PERIOD_NOT_STARTED'
+    )
     const message = error instanceof Error && error.message.includes('Unique constraint')
       ? 'El SKU ya existe.'
       : error instanceof Error && error.message.includes('Foreign key constraint')
         ? 'La categoría seleccionada no existe.'
-        : 'No se pudo guardar el producto.'
+        : error instanceof Error && error.message === 'ACCOUNTING_PERIOD_CLOSED'
+          ? 'El período contable de esta fecha está cerrado.'
+          : error instanceof Error && error.message === 'ACCOUNTING_PERIOD_NOT_STARTED'
+            ? 'La fecha de operación es anterior al inicio del libro mayor.'
+            : 'No se pudo guardar el producto.'
 
-    return NextResponse.json({ error: message }, { status: 400 })
+    if (!knownInputError) console.error('ERROR_CREATING_PRODUCT', error)
+    return NextResponse.json({ error: message }, { status: knownInputError ? 400 : 500 })
   }
 }
 

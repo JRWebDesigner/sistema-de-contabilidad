@@ -167,7 +167,7 @@ export default function CategoriesModule() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={4}>Cargando categorías...</td>
+                  <td colSpan={4} className="database-loading">Cargando categorías...</td>
                 </tr>
               ) : filteredCategories.length === 0 ? (
                 <tr>

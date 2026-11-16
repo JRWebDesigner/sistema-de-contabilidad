@@ -265,7 +265,7 @@ export default function AccountingModule() {
 
       {message && <p className="module-message">{message}</p>}
       <article className="panel module-table">
-        {loading ? <p className="muted" style={{ padding: "1rem" }}>Cargando informe...</p> : data && <ReportView type={reportType} data={data} />}
+        {loading ? <p className="muted database-loading" style={{ padding: "1rem" }}>Cargando informe...</p> : data && <ReportView type={reportType} data={data} />}
       </article>
 
       <section className="panel module-table" style={{ marginTop: "1rem" }}>

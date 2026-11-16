@@ -24,8 +24,8 @@ export type SaleNotePdfData = {
   taxAmount: number
   total: number
   items: Array<{
-    name: string
     sku: string
+    name: string
     type: 'PRODUCT' | 'SERVICE'
     quantity: number
     unitPrice: number
@@ -184,18 +184,20 @@ function SaleNoteDocument({ note }: { note: SaleNotePdfData }) {
         <Text style={styles.sectionTitle}>Detalle de productos y servicios</Text>
         <View style={styles.table}>
           <View style={styles.tableHeader} fixed>
-            <Text style={[styles.headerCell, { width: '43%' }]}>DescripciÃ³n</Text>
-            <Text style={[styles.headerCell, { width: '10%' }]}>Tipo</Text>
-            <Text style={[styles.headerCell, styles.alignRight, { width: '9%' }]}>Cant.</Text>
+            <Text style={[styles.headerCell, { width: '12%' }]}>Cod.Item</Text>
+            <Text style={[styles.headerCell, { width: '31%' }]}>Producto</Text>
+            <Text style={[styles.headerCell, { width: '11%' }]}>Tipo</Text>
+            <Text style={[styles.headerCell, styles.alignRight, { width: '8%' }]}>Cant.</Text>
             <Text style={[styles.headerCell, styles.alignRight, { width: '14%' }]}>Precio</Text>
             <Text style={[styles.headerCell, styles.alignRight, { width: '9%' }]}>Desc.</Text>
             <Text style={[styles.headerCell, styles.alignRight, { width: '15%' }]}>Importe</Text>
           </View>
           {note.items.map((item, index) => (
             <View key={`${item.sku}-${index}`} style={[styles.row, index % 2 ? styles.alternateRow : {}]} wrap={false}>
-              <Text style={[styles.cell, { width: '43%' }]}>{item.name}{item.sku ? ` · ${item.sku}` : ''}</Text>
-              <Text style={[styles.cell, { width: '10%' }]}>{item.type === 'SERVICE' ? 'Servicio' : 'Producto'}</Text>
-              <Text style={[styles.cell, styles.alignRight, { width: '9%' }]}>{item.quantity}</Text>
+              <Text style={[styles.cell, { width: '12%' }]}>{item.sku || '-'}</Text>
+              <Text style={[styles.cell, { width: '31%' }]}>{item.name}</Text>
+              <Text style={[styles.cell, { width: '11%' }]}>{item.type === 'SERVICE' ? 'Servicio' : 'Producto'}</Text>
+              <Text style={[styles.cell, styles.alignRight, { width: '8%' }]}>{item.quantity}</Text>
               <Text style={[styles.cell, styles.alignRight, { width: '14%' }]}>{currency.format(item.unitPrice)}</Text>
               <Text style={[styles.cell, styles.alignRight, { width: '9%' }]}>{item.discountPercent > 0 ? `${item.discountPercent}%` : '-'}</Text>
               <Text style={[styles.cell, styles.alignRight, { width: '15%' }]}>{currency.format(item.lineTotal)}</Text>
@@ -231,7 +233,7 @@ function SaleNoteDocument({ note }: { note: SaleNotePdfData }) {
 
         <View style={styles.footer} fixed>
           <Text>Importlilimlab · Precios expresados en bolivianos (Bs)</Text>
-          <Text render={({ pageNumber, totalPages }) => `PÃ¡gina ${pageNumber} de ${totalPages}`} />
+          <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>
     </Document>

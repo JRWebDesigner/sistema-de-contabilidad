@@ -587,7 +587,7 @@ export default function InventoryModule() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={5}>Cargando inventario...</td>
+                  <td colSpan={5} className="database-loading">Cargando inventario...</td>
                 </tr>
               ) : (
                 products.map((product) => (
@@ -659,7 +659,7 @@ export default function InventoryModule() {
             <tbody>
               {isLoadingHistory ? (
                 <tr>
-                  <td colSpan={6}>Cargando historial...</td>
+                  <td colSpan={6} className="database-loading">Cargando historial...</td>
                 </tr>
               ) : history.length === 0 ? (
                 <tr>

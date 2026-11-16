@@ -579,7 +579,7 @@ export default function ProductsModule() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={8}>Cargando productos...</td>
+                  <td colSpan={8} className="database-loading">Cargando productos...</td>
                 </tr>
               ) : (
                 products.map((product) => (

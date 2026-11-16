@@ -343,7 +343,7 @@ export default function ReportArchiveModule() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={8}>Cargando documentos...</td></tr>
+                <tr><td colSpan={8} className="database-loading">Cargando documentos...</td></tr>
               ) : reports.length === 0 ? (
                 <tr><td colSpan={8}>No hay documentos para mostrar.</td></tr>
               ) : reports.map((report) => (

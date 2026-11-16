@@ -60,6 +60,7 @@ export async function GET(request: Request) {
   const pageSize = Math.min(parsedPageSize.data, 100)
   const requestedPage = parsedPage.data
   const query = (url.searchParams.get('q') ?? '').trim().slice(0, 120)
+  const includeSummary = url.searchParams.get('summary') !== 'false'
   const contains = { contains: query, mode: 'insensitive' as const }
 
   if (parsedType.data === 'vendedores') {
@@ -277,7 +278,7 @@ export async function GET(request: Request) {
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),
-      prisma.sale.findMany({
+      includeSummary ? prisma.sale.findMany({
         where: { ...dateWhere, status: 'COMPLETED' },
         select: {
           id: true,
@@ -303,14 +304,14 @@ export async function GET(request: Request) {
             },
           },
         },
-      }),
-      canReadFinance ? prisma.accountReceivable.aggregate({ where: branchContext.isAll ? undefined : { sale: { is: scope } }, _sum: { balance: true } }) : Promise.resolve(null),
-      canReadFinance ? prisma.cashAccount.aggregate({ where: { isActive: true, ...scope }, _sum: { balance: true } }) : Promise.resolve(null),
-      prisma.proforma.aggregate({ where: proformaDateWhere, _count: { _all: true }, _sum: { total: true } }),
-      prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'ACCEPTED' }, _count: { _all: true }, _sum: { total: true } }),
-      prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'SENT', validUntil: { gte: proformaFunnelAt } }, _count: { _all: true }, _sum: { total: true } }),
-      prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'SENT', validUntil: { lt: proformaFunnelAt } }, _count: { _all: true }, _sum: { total: true } }),
-      prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'REJECTED' }, _count: { _all: true }, _sum: { total: true } }),
+      }) : Promise.resolve([]),
+      includeSummary && canReadFinance ? prisma.accountReceivable.aggregate({ where: branchContext.isAll ? undefined : { sale: { is: scope } }, _sum: { balance: true } }) : Promise.resolve(null),
+      includeSummary && canReadFinance ? prisma.cashAccount.aggregate({ where: { isActive: true, ...scope }, _sum: { balance: true } }) : Promise.resolve(null),
+      includeSummary ? prisma.proforma.aggregate({ where: proformaDateWhere, _count: { _all: true }, _sum: { total: true } }) : Promise.resolve(null),
+      includeSummary ? prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'ACCEPTED' }, _count: { _all: true }, _sum: { total: true } }) : Promise.resolve(null),
+      includeSummary ? prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'SENT', validUntil: { gte: proformaFunnelAt } }, _count: { _all: true }, _sum: { total: true } }) : Promise.resolve(null),
+      includeSummary ? prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'SENT', validUntil: { lt: proformaFunnelAt } }, _count: { _all: true }, _sum: { total: true } }) : Promise.resolve(null),
+      includeSummary ? prisma.proforma.aggregate({ where: { ...proformaDateWhere, status: 'REJECTED' }, _count: { _all: true }, _sum: { total: true } }) : Promise.resolve(null),
     ])
 
     type Performance = {
@@ -407,6 +408,46 @@ export async function GET(request: Request) {
       .sort((left, right) => right.revenue - left.revenue)
       .slice(0, 10)
 
+    const commercialSummary = includeSummary ? {
+      from: fromDate.date?.toISOString().slice(0, 10) ?? null,
+      to: toDate.date?.toISOString().slice(0, 10) ?? null,
+      saleCount: totals.saleCount,
+      quantity: totals.quantity,
+      revenue: rounded(totals.revenue),
+      discounts: rounded(totals.discounts),
+      margin: canReadFinance ? rounded(totals.revenue - totals.cost) : null,
+      averageTicket: totals.saleCount ? rounded(totals.revenue / totals.saleCount) : 0,
+      byCustomer: serializeGroups(byCustomer),
+      byProduct: serializeGroups(byProduct),
+      bySegment: serializeGroups(bySegment),
+      byPromotion: serializeGroups(byPromotion),
+      proformaFunnel: {
+        issued: {
+          count: issuedProformas?._count._all ?? 0,
+          amount: Number(issuedProformas?._sum.total ?? 0),
+        },
+        converted: {
+          count: acceptedProformas?._count._all ?? 0,
+          amount: Number(acceptedProformas?._sum.total ?? 0),
+        },
+        pending: {
+          count: pendingProformas?._count._all ?? 0,
+          amount: Number(pendingProformas?._sum.total ?? 0),
+        },
+        expired: {
+          count: expiredProformas?._count._all ?? 0,
+          amount: Number(expiredProformas?._sum.total ?? 0),
+        },
+        rejected: {
+          count: rejectedProformas?._count._all ?? 0,
+          amount: Number(rejectedProformas?._sum.total ?? 0),
+        },
+        conversionRate: issuedProformas?._count._all
+          ? rounded((acceptedProformas?._count._all ?? 0) / issuedProformas._count._all * 100)
+          : 0,
+      },
+    } : null
+
     return NextResponse.json({
       data: sales.map((sale) => ({
         ...sale,
@@ -439,49 +480,13 @@ export async function GET(request: Request) {
         })),
       })),
       pagination: pagination(total, page, pageSize),
-      salesSummary: {
-        receivables: Number(receivables?._sum.balance ?? 0),
-        cash: Number(accounts?._sum.balance ?? 0),
-      },
-      commercialSummary: {
-        from: fromDate.date?.toISOString().slice(0, 10) ?? null,
-        to: toDate.date?.toISOString().slice(0, 10) ?? null,
-        saleCount: totals.saleCount,
-        quantity: totals.quantity,
-        revenue: rounded(totals.revenue),
-        discounts: rounded(totals.discounts),
-        margin: canReadFinance ? rounded(totals.revenue - totals.cost) : null,
-        averageTicket: totals.saleCount ? rounded(totals.revenue / totals.saleCount) : 0,
-        byCustomer: serializeGroups(byCustomer),
-        byProduct: serializeGroups(byProduct),
-        bySegment: serializeGroups(bySegment),
-        byPromotion: serializeGroups(byPromotion),
-        proformaFunnel: {
-          issued: {
-            count: issuedProformas._count._all,
-            amount: Number(issuedProformas._sum.total ?? 0),
-          },
-          converted: {
-            count: acceptedProformas._count._all,
-            amount: Number(acceptedProformas._sum.total ?? 0),
-          },
-          pending: {
-            count: pendingProformas._count._all,
-            amount: Number(pendingProformas._sum.total ?? 0),
-          },
-          expired: {
-            count: expiredProformas._count._all,
-            amount: Number(expiredProformas._sum.total ?? 0),
-          },
-          rejected: {
-            count: rejectedProformas._count._all,
-            amount: Number(rejectedProformas._sum.total ?? 0),
-          },
-          conversionRate: issuedProformas._count._all
-            ? rounded(acceptedProformas._count._all / issuedProformas._count._all * 100)
-            : 0,
+      ...(commercialSummary ? {
+        salesSummary: {
+          receivables: Number(receivables?._sum.balance ?? 0),
+          cash: Number(accounts?._sum.balance ?? 0),
         },
-      },
+        commercialSummary,
+      } : {}),
     })
   }
 

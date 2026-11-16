@@ -597,7 +597,7 @@ export default function CashModule() {
             <label>Desde<input type="date" value={statementFrom} max={statementTo} onChange={(event) => setStatementFrom(event.target.value)} /></label>
             <label>Hasta<input type="date" value={statementTo} min={statementFrom} onChange={(event) => setStatementTo(event.target.value)} /></label>
           </div>
-          {statementLoading ? <p>Cargando estado de cuenta...</p> : statement && <>
+          {statementLoading ? <p className="database-loading">Cargando estado de cuenta...</p> : statement && <>
             <div className="module-stats">
               <div><span>Saldo inicial</span><strong>{money.format(statement.openingBalance)}</strong></div>
               <div><span>Saldo al cierre</span><strong>{money.format(statement.closingBalance)}</strong></div>

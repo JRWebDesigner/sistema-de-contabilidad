@@ -31,7 +31,20 @@ export async function GET(request: Request) {
     where: branchContext.isAll ? undefined : { sale: { is: branchWhere(branchContext) } },
     include: {
       customer: { select: { id: true, name: true, document: true } },
-      sale: { select: { number: true, createdAt: true, paymentMethod: true } },
+      sale: {
+        select: {
+          number: true,
+          createdAt: true,
+          paymentMethod: true,
+          notes: true,
+          items: {
+            select: {
+              quantity: true,
+              product: { select: { name: true, type: true } },
+            },
+          },
+        },
+      },
       payments: { include: { cashAccount: { select: { id: true, name: true, type: true } } }, orderBy: { createdAt: 'asc' } },
     },
     orderBy: { dueDate: 'asc' },
@@ -242,7 +255,7 @@ export async function POST(request: Request) {
           moduleName: 'Caja y bancos',
           entity: 'CashAccount',
           entityId: account.id,
-          details: `Se creÃ³ automÃ¡ticamente la cuenta de efectivo en custodia de ${operator.alias}.`,
+          details: `Se creó automáticamente la cuenta de efectivo en custodia de ${operator.alias}.`,
           newValue: { name: account.name, type: 'CASH', custodianId: access.session.userId },
         }, transaction)
       }

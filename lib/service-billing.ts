@@ -258,25 +258,25 @@ export async function createSubscriptionInvoice(
 }
 
 export async function billDueSubscriptions() {
-  return serializableTransaction(async (transaction) => {
-    const now = new Date()
-    const dueSubscriptions = await transaction.serviceSubscription.findMany({
-      where: { status: 'ACTIVE', nextBillingDate: { lte: now } },
-      include: {
-        customer: { select: { id: true, paymentDays: true } },
-        serviceProduct: { select: { id: true, name: true, cost: true } },
-      },
-      orderBy: { nextBillingDate: 'asc' },
-      take: 100,
-    })
+  const dueSubscriptions = await prisma.serviceSubscription.findMany({
+    where: { status: 'ACTIVE', nextBillingDate: { lte: new Date() } },
+    include: {
+      customer: { select: { id: true, paymentDays: true } },
+      serviceProduct: { select: { id: true, name: true, cost: true } },
+    },
+    orderBy: { nextBillingDate: 'asc' },
+    take: 100,
+  })
 
-    let billed = 0
-    for (const subscription of dueSubscriptions) {
-      if (subscription.billingPeriod !== 'MONTHLY' && subscription.billingPeriod !== 'ANNUAL') {
-        throw new Error(`INVALID_SUBSCRIPTION_BILLING_PERIOD:${subscription.id}`)
-      }
-      const periodStart = subscription.nextBillingDate
-      const upcomingDate = nextPeriod(periodStart, subscription.billingPeriod)
+  let billed = 0
+  for (const subscription of dueSubscriptions) {
+    if (subscription.billingPeriod !== 'MONTHLY' && subscription.billingPeriod !== 'ANNUAL') {
+      throw new Error(`INVALID_SUBSCRIPTION_BILLING_PERIOD:${subscription.id}`)
+    }
+
+    const periodStart = subscription.nextBillingDate
+    const upcomingDate = nextPeriod(periodStart, subscription.billingPeriod)
+    const wasBilled = await serializableTransaction(async (transaction) => {
       const claim = await transaction.serviceSubscription.updateMany({
         where: {
           id: subscription.id,
@@ -285,14 +285,16 @@ export async function billDueSubscriptions() {
         },
         data: { nextBillingDate: upcomingDate },
       })
-      if (claim.count !== 1) continue
+      if (claim.count !== 1) return false
 
       await createSubscriptionInvoice(transaction, subscription, periodStart, 'SYS')
-      billed += 1
-    }
+      return true
+    }, { maxWait: 10_000, timeout: 30_000 })
 
-    return billed
-  })
+    if (wasBilled) billed += 1
+  }
+
+  return billed
 }
 
 export function nextSubscriptionBillingDate(date: Date, period: BillingPeriod) {

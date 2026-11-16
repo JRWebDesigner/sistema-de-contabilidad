@@ -1,10 +1,11 @@
 "use client";
 
 import { Fragment, FormEvent, useEffect, useState } from "react";
-import { ArrowUpRight, CircleDollarSign } from "lucide-react";
+import { ArrowUpRight, CircleDollarSign, Printer } from "lucide-react";
 
 import Modal from "./ui/modal";
 import { usePermission } from "./permissions-context";
+import { openPayablePaymentReceiptPdf, type PayablePaymentReceiptPdfData } from "./payable-payment-receipt-pdf";
 
 type Payable = {
   id: string;
@@ -88,20 +89,61 @@ export default function PayablesModule() {
   useEffect(() => {
     void load();
   }, []);
+  async function printPaymentNote(paymentId: string, previewWindow = window.open("about:blank", "_blank")) {
+    if (!previewWindow) throw new Error("El navegador bloqueó la ventana de impresión.");
+    try {
+      const response = await fetch("/api/payables/receipt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "No se pudo generar la nota de cobro.");
+      await openPayablePaymentReceiptPdf(data as PayablePaymentReceiptPdfData, previewWindow);
+    } catch (error) {
+      previewWindow.close();
+      throw error;
+    }
+  }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const response = await fetch("/api/payables", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, payableId: selected }),
-    });
-    const data = await response.json();
-    setMessage(response.ok ? `Pago ${data.reference} registrado.` : data.error);
-    if (response.ok) {
+    const previewWindow = window.open("about:blank", "_blank");
+    try {
+      const response = await fetch("/api/payables", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, payableId: selected }),
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        previewWindow?.close();
+        setMessage(data?.error ?? "No se pudo registrar el pago.");
+        return;
+      }
+
       setSelected("");
       setForm((current) => ({ ...current, amount: "" }));
       setPaymentModalOpen(false);
       await load();
+      if (!data?.paymentId) {
+        previewWindow?.close();
+        setMessage("El pago se registró, pero no se recibió su identificador para generar la nota.");
+        return;
+      }
+      if (!previewWindow) {
+        setMessage(`Pago ${data.reference} registrado. Permite ventanas emergentes y reimprime la nota desde el historial de abonos.`);
+        return;
+      }
+      try {
+        await printPaymentNote(data.paymentId, previewWindow);
+        setMessage(`Pago ${data.reference} registrado y nota de cobro lista para imprimir.`);
+      } catch (error) {
+        previewWindow.close();
+        setMessage(`Pago ${data.reference} registrado, pero no se pudo generar la nota de cobro: ${error instanceof Error ? error.message : "error desconocido"}.`);
+      }
+    } catch (error) {
+      previewWindow?.close();
+      setMessage(error instanceof Error ? error.message : "No se pudo registrar el pago.");
     }
   }
   async function reversePayment(paymentId: string) {
@@ -326,7 +368,12 @@ export default function PayablesModule() {
                                   <td>{payment.paymentMethod}</td>
                                   <td>{money.format(Number(payment.amount))}</td>
                                   <td>{payment.reversedAt ? `Revertido ${new Date(payment.reversedAt).toLocaleString("es-BO")}: ${payment.reversalReason ?? ""}` : "Vigente"}</td>
-                                  <td>{canWrite && !payment.reversedAt && <button className="outline-button" type="button" onClick={() => void reversePayment(payment.id)}>Revertir</button>}</td>
+                                  <td>
+                                    {!payment.reversedAt && <button className="outline-button" type="button" onClick={() => void printPaymentNote(payment.id).catch((error) => setMessage(error instanceof Error ? error.message : "No se pudo generar la nota de cobro."))}>
+                                      <Printer size={14} /> Imprimir nota
+                                    </button>}
+                                    {canWrite && !payment.reversedAt && <button className="outline-button" type="button" onClick={() => void reversePayment(payment.id)}>Revertir</button>}
+                                  </td>
                                 </tr>
                               ))}</tbody>
                             </table>

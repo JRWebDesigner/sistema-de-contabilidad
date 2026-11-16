@@ -62,7 +62,7 @@ export default function AuditModule() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={6}>Cargando auditoría...</td></tr>
+                <tr><td colSpan={6} className="database-loading">Cargando auditoría...</td></tr>
               ) : entries.length === 0 ? (
                 <tr><td colSpan={6}>No hay registros de auditoría todavía.</td></tr>
               ) : entries.map((entry) => (

@@ -24,13 +24,10 @@ export type JournalLineInput = {
 }
 
 export async function ensureSystemAccounts(transaction: Prisma.TransactionClient) {
-  for (const account of systemAccounts) {
-    await transaction.ledgerAccount.upsert({
-      where: { code: account.code },
-      create: { ...account, isSystem: true },
-      update: {},
-    })
-  }
+  await transaction.ledgerAccount.createMany({
+    data: systemAccounts.map((account) => ({ ...account, isSystem: true })),
+    skipDuplicates: true,
+  })
 }
 
 export async function postJournalEntry(

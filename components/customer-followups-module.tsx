@@ -227,7 +227,7 @@ export default function CustomerFollowUpsModule() {
           </div>
 
           {isLoading ? (
-            <p className="module-message" aria-live="polite">Cargando actividad comercial…</p>
+            <p className="module-message database-loading" aria-live="polite">Cargando actividad comercial…</p>
           ) : currentItems.length === 0 ? (
             <p className="module-message">{query ? "No se encontraron seguimientos. Prueba con otra búsqueda." : view === "OPEN" ? "No hay seguimientos pendientes." : "Aún no hay actividades completadas."}</p>
           ) : (

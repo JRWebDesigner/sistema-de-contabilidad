@@ -27,6 +27,24 @@ const saleSchema = z.object({
 
 const roundMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100
 
+const saleBusinessErrors = new Map<string, string>([
+  ['CUSTOMER_REQUIRED', 'Las ventas a crédito necesitan un cliente.'],
+  ['CREDIT_NOT_AUTHORIZED', 'El cliente no tiene crédito habilitado o no tiene un límite definido.'],
+  ['CREDIT_LIMIT_EXCEEDED', 'La venta supera el límite de crédito disponible del cliente.'],
+  ['PAYMENT_EXCEEDS_TOTAL', 'El abono no puede ser mayor al total de la venta.'],
+  ['INVALID_CREDIT_PAYMENT', 'El medio Credito no se puede usar como un abono.'],
+  ['PAYMENT_REFERENCE_REQUIRED', 'El numero de comprobante es obligatorio para transferencias.'],
+  ['SELLER_NOT_FOUND', 'No se pudo identificar a la persona responsable de la venta.'],
+  ['RECURRING_SERVICE_REQUIRES_SUBSCRIPTION', 'Los servicios mensuales o anuales deben contratarse desde Suscripciones.'],
+  ['CASH_ACCOUNT_REQUIRED', 'Selecciona una cuenta para registrar el cobro.'],
+  ['CASH_ACCOUNT_NOT_FOUND', 'La cuenta seleccionada no existe o está inactiva.'],
+  ['INSUFFICIENT_STOCK', 'Stock insuficiente para uno de los productos.'],
+  ['INSUFFICIENT_BRANCH_STOCK', 'La sucursal no tiene existencias suficientes de uno de los productos.'],
+  ['PRODUCT_NOT_FOUND', 'Uno de los productos no existe o está inactivo.'],
+  ['ACCOUNTING_PERIOD_CLOSED', 'El período contable de esta fecha está cerrado.'],
+  ['ACCOUNTING_PERIOD_NOT_STARTED', 'La fecha de operación es anterior al inicio del libro mayor.'],
+])
+
 function receivableNumber() {
   return `CXC-${Date.now().toString(36).toUpperCase()}`
 }
@@ -403,39 +421,11 @@ export async function POST(request: Request) {
     }, { status: 201 })
   } catch (error) {
     console.error('ERROR_CREATING_SALE', error)
-    const message = error instanceof Error && error.message === 'CUSTOMER_REQUIRED'
-      ? 'Las ventas a crédito necesitan un cliente.'
-      : error instanceof Error && error.message === 'CREDIT_NOT_AUTHORIZED'
-        ? 'El cliente no tiene crédito habilitado o no tiene un límite definido.'
-        : error instanceof Error && error.message === 'CREDIT_LIMIT_EXCEEDED'
-          ? 'La venta supera el límite de crédito disponible del cliente.'
-      : error instanceof Error && error.message === 'PAYMENT_EXCEEDS_TOTAL'
-        ? 'El abono no puede ser mayor al total de la venta.'
-        : error instanceof Error && error.message === 'INVALID_CREDIT_PAYMENT'
-          ? 'El medio Credito no se puede usar como un abono.'
-          : error instanceof Error && error.message === 'PAYMENT_REFERENCE_REQUIRED'
-            ? 'El numero de comprobante es obligatorio para transferencias.'
-            : error instanceof Error && error.message === 'SELLER_NOT_FOUND'
-              ? 'No se pudo identificar a la persona responsable de la venta.'
-      : error instanceof Error && error.message === 'RECURRING_SERVICE_REQUIRES_SUBSCRIPTION'
-        ? 'Los servicios mensuales o anuales deben contratarse desde Suscripciones.'
-      : error instanceof Error && error.message === 'CASH_ACCOUNT_REQUIRED'
-      ? 'Selecciona una cuenta para registrar el cobro.'
-      : error instanceof Error && error.message === 'CASH_ACCOUNT_NOT_FOUND'
-        ? 'La cuenta seleccionada no existe o está inactiva.'
-        : error instanceof Error && error.message === 'INSUFFICIENT_STOCK'
-      ? 'Stock insuficiente para uno de los productos.'
-      : error instanceof Error && error.message === 'INSUFFICIENT_BRANCH_STOCK'
-        ? 'La sucursal no tiene existencias suficientes de uno de los productos.'
-      : error instanceof Error && error.message === 'PRODUCT_NOT_FOUND'
-        ? 'Uno de los productos no existe o está inactivo.'
-        : error instanceof Error && error.message === 'ACCOUNTING_PERIOD_CLOSED'
-          ? 'El período contable de esta fecha está cerrado.'
-          : error instanceof Error && error.message === 'ACCOUNTING_PERIOD_NOT_STARTED'
-            ? 'La fecha de operación es anterior al inicio del libro mayor.'
-        : 'No se pudo registrar la venta.'
-
-    return NextResponse.json({ error: message }, { status: 400 })
+    const message = error instanceof Error ? saleBusinessErrors.get(error.message) : undefined
+    return NextResponse.json(
+      { error: message ?? 'No se pudo registrar la venta.' },
+      { status: message ? 400 : 500 },
+    )
   }
 }
 

@@ -23,23 +23,28 @@ export async function GET(request: Request) {
   const canReadInventory = rolePermissionSet.includes('inventory:read')
   const canReadFinance = rolePermissionSet.includes('finance:read')
 
-  const [sales, previousSales] = canReadSales
+  const [yearSales, sales, previousSales] = canReadSales
     ? await Promise.all([
         prisma.sale.findMany({
           where: { ...scope, status: 'COMPLETED', createdAt: { gte: startOfYear } },
-          include: {
-            items: { include: { product: { select: { name: true, sku: true } } } },
+          select: { createdAt: true, total: true, returns: { select: { total: true } } },
+        }),
+        prisma.sale.findMany({
+          where: { ...scope, status: 'COMPLETED', createdAt: { gte: startOfMonth } },
+          select: {
+            createdAt: true,
+            total: true,
+            items: { select: { productId: true, quantity: true, lineTotal: true, unitCost: true, product: { select: { name: true, sku: true } } } },
             movements: { where: { type: 'RETURN_IN' }, select: { productId: true, quantity: true } },
-            returns: { include: { items: { select: { productId: true, quantity: true, lineTotal: true, saleItem: { select: { unitCost: true } } } } } },
+            returns: { select: { total: true, items: { select: { productId: true, quantity: true, lineTotal: true, saleItem: { select: { unitCost: true } } } } } },
           },
-          orderBy: { createdAt: 'desc' },
         }),
         prisma.sale.findMany({
           where: { ...scope, status: 'COMPLETED', createdAt: { gte: startOfPreviousMonth, lt: startOfMonth } },
           select: { total: true, returns: { select: { total: true } } },
         }),
       ])
-    : [[], null]
+    : [[], [], null]
     const [products, movements] = canReadInventory
     ? await Promise.all([
         prisma.product.findMany({ where: { isActive: true, type: 'PRODUCT' }, include: { category: true, branchStocks: { where: scope, select: { quantity: true } } }, orderBy: { currentStock: 'asc' } })
@@ -60,11 +65,28 @@ export async function GET(request: Request) {
       : [[], []]
   const [accounts, receivables, payables] = canReadFinance
     ? await Promise.all([
-        prisma.cashAccount.findMany({ where: { isActive: true, ...scope }, include: { movements: { select: { type: true, amount: true } } }, orderBy: { name: 'asc' } }),
-        prisma.accountReceivable.findMany({ where: { status: { not: 'CANCELLED' }, ...(branchContext.isAll ? {} : { sale: { is: scope } }) } }),
-        prisma.accountPayable.findMany({ where: { status: { not: 'CANCELLED' }, ...(branchContext.isAll ? {} : { purchase: { is: scope } }) } }),
+        prisma.cashAccount.findMany({
+          where: { isActive: true, ...scope },
+          select: { name: true, type: true, balance: true },
+          orderBy: { name: 'asc' },
+        }),
+        prisma.accountReceivable.aggregate({
+          where: { status: { not: 'CANCELLED' }, ...(branchContext.isAll ? {} : { sale: { is: scope } }) },
+          _sum: { originalAmount: true, paidAmount: true, balance: true },
+        }),
+        prisma.accountPayable.aggregate({
+          where: { status: { not: 'CANCELLED' }, ...(branchContext.isAll ? {} : { purchase: { is: scope } }) },
+          _sum: { originalAmount: true, paidAmount: true, balance: true },
+        }),
       ])
-    : [[], [], []]
+    : [[], null, null]
+  const cashMovementTotals = canReadFinance
+    ? await prisma.cashMovement.groupBy({
+        by: ['type'],
+        where: { account: { is: { isActive: true, ...scope } } },
+        _sum: { amount: true },
+      })
+    : []
   const inventoryLedger = canReadFinance
     ? await prisma.journalLine.aggregate({ where: { account: { is: { code: '1300' } }, entry: { is: scope } }, _sum: { debit: true, credit: true } })
     : null
@@ -107,18 +129,19 @@ export async function GET(request: Request) {
     sum + Number(sale.total) - sale.returns.reduce((returned, item) => returned + Number(item.total), 0), 0) ?? 0
   const change = previousTotal === 0 ? 0 : ((currentSalesTotal - previousTotal) / previousTotal) * 100
   const inventoryValue = inventorySnapshot.reduce((sum, product) => sum + Number(product.cost) * product.currentStock, 0)
-  const receivableTotal = receivables.reduce((sum, item) => sum + Number(item.balance), 0)
-  const payableTotal = payables.reduce((sum, item) => sum + Number(item.balance), 0)
+  const receivableTotal = Number(receivables?._sum.balance ?? 0)
+  const payableTotal = Number(payables?._sum.balance ?? 0)
   const round = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100
   const difference = (left: number, right: number) => round(left - right)
   const cashBalance = round(accounts.reduce((sum, account) => sum + Number(account.balance), 0))
-  const cashMovements = round(accounts.reduce((sum, account) => sum + account.movements.reduce((accountSum, movement) => accountSum + (movement.type === 'IN' ? Number(movement.amount) : -Number(movement.amount)), 0), 0))
-  const receivableOriginal = round(receivables.reduce((sum, item) => sum + Number(item.originalAmount), 0))
-  const receivablePaid = round(receivables.reduce((sum, item) => sum + Number(item.paidAmount), 0))
-  const receivableBalance = round(receivables.reduce((sum, item) => sum + Number(item.balance), 0))
-  const payableOriginal = round(payables.reduce((sum, item) => sum + Number(item.originalAmount), 0))
-  const payablePaid = round(payables.reduce((sum, item) => sum + Number(item.paidAmount), 0))
-  const payableBalance = round(payables.reduce((sum, item) => sum + Number(item.balance), 0))
+  const cashMovements = round(cashMovementTotals.reduce((sum, movement) =>
+    sum + (movement.type === 'IN' ? Number(movement._sum.amount ?? 0) : -Number(movement._sum.amount ?? 0)), 0))
+  const receivableOriginal = round(Number(receivables?._sum.originalAmount ?? 0))
+  const receivablePaid = round(Number(receivables?._sum.paidAmount ?? 0))
+  const receivableBalance = round(Number(receivables?._sum.balance ?? 0))
+  const payableOriginal = round(Number(payables?._sum.originalAmount ?? 0))
+  const payablePaid = round(Number(payables?._sum.paidAmount ?? 0))
+  const payableBalance = round(Number(payables?._sum.balance ?? 0))
   const inventoryCostValue = round(inventoryValue)
   const movementQuantityByProduct = new Map(inventoryMovementTotals.map((movement) => [movement.productId, Number(movement._sum.quantity ?? 0)]))
   const inventoryMismatches = inventorySnapshot.filter((product) => product.currentStock !== (movementQuantityByProduct.get(product.id) ?? 0))
@@ -126,7 +149,7 @@ export async function GET(request: Request) {
   const inventoryLedgerDifference = round(inventoryCostValue - inventoryLedgerValue)
   const chart = Array.from({ length: 12 }, (_, index) => ({
     month: new Date(now.getFullYear(), index, 1).toLocaleDateString('es-BO', { month: 'short' }).replace('.', ''),
-    value: sales.filter((sale) => sale.createdAt.getMonth() === index).reduce((sum, sale) =>
+    value: yearSales.filter((sale) => sale.createdAt.getMonth() === index).reduce((sum, sale) =>
       sum + Number(sale.total) - sale.returns.reduce((returned, item) => returned + Number(item.total), 0), 0),
   }))
 

@@ -474,7 +474,7 @@ export default function SubscriptionsModule() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={9}>Cargando servicios contratados...</td></tr>
+                <tr><td colSpan={9} className="database-loading">Cargando servicios contratados...</td></tr>
               ) : subscriptions.length === 0 ? (
                 <tr><td colSpan={9}>Todavía no hay servicios contratados.</td></tr>
               ) : subscriptions.map((subscription) => {

@@ -206,6 +206,7 @@ export default function ReportsModule({ permissions }: { permissions: string[] }
           params.set('from', fromDate)
           params.set('to', toDate)
         }
+        if (reportType === 'ventas' && page > 1) params.set('summary', 'false')
         if (reportType === 'cxc' || reportType === 'cxp') {
           params.set('from', fromDate)
           params.set('to', toDate)
@@ -223,9 +224,13 @@ export default function ReportsModule({ permissions }: { permissions: string[] }
         setColumns(normalized.columns)
         setRows(normalized.rows)
         setPagination(result.pagination)
-        setSalesSummary(result.salesSummary ?? { receivables: 0, cash: 0 })
-        setCashAccountsSummary(result.cashAccountsSummary ?? [])
-        setCommercialSummary(reportType === 'ventas' ? result.commercialSummary ?? null : null)
+        if (result.salesSummary) setSalesSummary(result.salesSummary)
+        if (result.cashAccountsSummary) setCashAccountsSummary(result.cashAccountsSummary)
+        if (reportType === 'ventas') {
+          if (result.commercialSummary) setCommercialSummary(result.commercialSummary)
+        } else {
+          setCommercialSummary(null)
+        }
         setSellerDailySummary(reportType === 'vendedores' ? result.sellerDailySummary ?? null : null)
       } catch (reason) {
         if (!active) return
@@ -279,6 +284,7 @@ export default function ReportsModule({ permissions }: { permissions: string[] }
             params.set('from', fromDate)
             params.set('to', toDate)
           }
+          if (reportType === 'ventas') params.set('summary', 'false')
           if (reportType === 'cxc' || reportType === 'cxp') {
             params.set('from', fromDate)
             params.set('to', toDate)
@@ -553,7 +559,7 @@ export default function ReportsModule({ permissions }: { permissions: string[] }
       <article className="panel module-table">
         <div className="table-scroll">
           {loading ? (
-            <p className="muted" style={{ padding: '1rem' }}>Cargando reporte...</p>
+            <p className="muted database-loading" style={{ padding: '1rem' }}>Cargando reporte...</p>
           ) : columns.length === 0 ? (
             <p className="muted" style={{ padding: '1rem' }}>No hay datos para este reporte.</p>
           ) : (

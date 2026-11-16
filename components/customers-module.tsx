@@ -933,7 +933,7 @@ export default function CustomersModule() {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={6}>Cargando clientes...</td>
+                  <td colSpan={6} className="database-loading">Cargando clientes...</td>
                 </tr>
               ) : (
                 customers.map((customer) => (

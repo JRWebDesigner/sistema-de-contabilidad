@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ProductsModule from "./products-module";
 import CustomersModule from "./customers-module";
 import SalesModule from "./sales-module-modal";
@@ -23,6 +23,7 @@ import CustomerFollowUpsModule from "./customer-followups-module";
 import AuditModule from "./audit-module";
 import ReportArchiveModule from "./report-archive-module";
 import { PermissionsProvider } from "./permissions-context";
+import { useGlobalLoading } from "@/components/global-loading";
 import {
   Activity,
   AlertTriangle,
@@ -63,9 +64,11 @@ import {
   Truck,
   UserRound,
   Users,
+  UserCog,
   WalletCards,
   X,
 } from "lucide-react";
+import Modal from "./ui/modal";
 
 type NavItem = { id: string; label: string; icon: typeof Package; permission?: string; anyPermission?: string[]; badge?: string }
 type NavGroup = { label: string; items: NavItem[] }
@@ -78,6 +81,174 @@ type CommercialAlerts = {
   inactiveCustomers: { count: number; items: Array<{ id: string; name: string; document: string; lastSaleAt: string | null }> };
 }
 type BranchChoice = { id: string; name: string; code: string }
+type UserProfile = { id: string; name: string; alias: string; email: string; role: string }
+
+function roleLabel(role: string) {
+  const labels: Record<string, string> = {
+    ADMIN: "Administrador",
+    SALES: "Ventas",
+    INVENTORY: "Inventario",
+    ACCOUNTING: "Contabilidad",
+    VIEWER: "Solo lectura",
+  };
+  return labels[role] ?? role;
+}
+
+function ProfileDialog({
+  open,
+  onClose,
+  profile,
+  onSaved,
+}: {
+  open: boolean;
+  onClose: () => void;
+  profile: UserProfile;
+  onSaved: (profile: UserProfile) => void;
+}) {
+  const [form, setForm] = useState({
+    name: profile.name,
+    alias: profile.alias,
+    email: profile.email,
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!open) return;
+    setForm({
+      name: profile.name,
+      alias: profile.alias,
+      email: profile.email,
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
+    setError("");
+  }, [open, profile]);
+
+  const saveProfile = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    if (form.newPassword && form.newPassword !== form.confirmPassword) {
+      setError("La confirmación de contraseña no coincide.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          alias: form.alias,
+          email: form.email,
+          currentPassword: form.currentPassword || undefined,
+          newPassword: form.newPassword || undefined,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "No se pudo actualizar el perfil.");
+      onSaved(result.user);
+      onClose();
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "No se pudo actualizar el perfil.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      page="Cuenta · Perfil"
+      title="Configuración del perfil"
+      description="Actualiza tus datos de acceso. Para cambiar la contraseña, confirma primero la actual."
+      className="profile-modal"
+    >
+      <form className="profile-form" onSubmit={saveProfile}>
+        <div className="profile-form-grid">
+          <label>
+            Nombre
+            <input
+              required
+              minLength={2}
+              maxLength={120}
+              value={form.name}
+              onChange={(event) => setForm({ ...form, name: event.target.value })}
+              autoComplete="name"
+            />
+          </label>
+          <label>
+            Alias
+            <input
+              required
+              minLength={3}
+              maxLength={40}
+              pattern="[a-zA-Z0-9._-]+"
+              value={form.alias}
+              onChange={(event) => setForm({ ...form, alias: event.target.value })}
+              autoComplete="username"
+            />
+          </label>
+          <label className="profile-form-wide">
+            Correo electrónico
+            <input
+              required
+              type="email"
+              maxLength={180}
+              value={form.email}
+              onChange={(event) => setForm({ ...form, email: event.target.value })}
+              autoComplete="email"
+            />
+          </label>
+          <label className="profile-form-wide">
+            Contraseña actual
+            <input
+              type="password"
+              autoComplete="current-password"
+              value={form.currentPassword}
+              onChange={(event) => setForm({ ...form, currentPassword: event.target.value })}
+            />
+          </label>
+          <label>
+            Nueva contraseña
+            <input
+              type="password"
+              minLength={8}
+              maxLength={100}
+              autoComplete="new-password"
+              value={form.newPassword}
+              onChange={(event) => setForm({ ...form, newPassword: event.target.value })}
+            />
+          </label>
+          <label>
+            Confirmar contraseña
+            <input
+              type="password"
+              minLength={8}
+              maxLength={100}
+              autoComplete="new-password"
+              value={form.confirmPassword}
+              onChange={(event) => setForm({ ...form, confirmPassword: event.target.value })}
+            />
+          </label>
+        </div>
+        {error && <p className="profile-form-error" role="alert">{error}</p>}
+        <div className="profile-form-actions">
+          <button type="button" className="outline-button" onClick={onClose} disabled={saving}>Cancelar</button>
+          <button type="submit" className="primary-button" disabled={saving}>
+            {saving ? "Guardando…" : "Guardar perfil"}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
 
 const navGroups: NavGroup[] = [
   {
@@ -771,6 +942,7 @@ function ModuleView({ id, onAction, permissions }: { id: string; onAction: () =>
 }
 
 export default function AdminSystem() {
+  const { isLoading } = useGlobalLoading();
   const [active, setActive] = useState("dashboard");
   const [hasHydrated, setHasHydrated] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -778,7 +950,7 @@ export default function AdminSystem() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [permissions, setPermissions] = useState<string[]>([]);
-  const [identity, setIdentity] = useState({ name: "", role: "" });
+  const [identity, setIdentity] = useState<UserProfile>({ id: "", name: "", alias: "", email: "", role: "" });
   const [commercialAlerts, setCommercialAlerts] = useState<CommercialAlerts | null>(null);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [alertsError, setAlertsError] = useState("");
@@ -786,6 +958,29 @@ export default function AdminSystem() {
   const [selectedBranchId, setSelectedBranchId] = useState("all");
   const [branchError, setBranchError] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (profileMenuRef.current && event.target instanceof Node && !profileMenuRef.current.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setProfileMenuOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [profileMenuOpen]);
+
   useEffect(() => {
     const savedTheme =
       window.localStorage.getItem("importlilimlab-theme") ??
@@ -815,7 +1010,13 @@ export default function AdminSystem() {
         const data = await response.json();
         const currentPermissions: string[] = data.permissions ?? [];
         setPermissions(currentPermissions);
-        setIdentity({ name: data.user?.name ?? "", role: data.user?.role ?? "" });
+        setIdentity({
+          id: data.user?.id ?? "",
+          name: data.user?.name ?? "",
+          alias: data.user?.alias ?? "",
+          email: data.user?.email ?? "",
+          role: data.user?.role ?? "",
+        });
         const available = navGroups.flatMap((group) => group.items).filter((item) => hasAccess(currentPermissions, item));
         setActive(stored && available.some((item) => item.id === stored) ? stored : available[0]?.id ?? "dashboard");
         setHasHydrated(true);
@@ -893,12 +1094,25 @@ export default function AdminSystem() {
     setTimeout(() => setToast(""), 2800);
   };
   const handleLogout = async () => {
-    await fetch("/api/auth", { method: "DELETE" });
-    window.location.href = "/login";
+    setLoggingOut(true);
+    try {
+      const response = await fetch("/api/auth", { method: "DELETE" });
+      if (!response.ok) throw new Error("No se pudo cerrar la sesión. Inténtalo nuevamente.");
+      window.location.href = "/login";
+    } catch (error) {
+      setLoggingOut(false);
+      setToast(error instanceof Error ? error.message : "No se pudo cerrar la sesión.");
+      window.setTimeout(() => setToast(""), 3200);
+    }
+  };
+  const handleProfileSaved = (profile: UserProfile) => {
+    setIdentity(profile);
+    setToast("Perfil actualizado correctamente.");
+    window.setTimeout(() => setToast(""), 2800);
   };
   return (
     <PermissionsProvider permissions={permissions}>
-    <div className="admin-shell">
+    <div className="admin-shell" inert={isLoading || undefined} aria-busy={isLoading}>
       <aside
         className={`admin-sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}
       >
@@ -1019,10 +1233,18 @@ export default function AdminSystem() {
           >
             <Menu size={20} />
           </button>
+          <div className="topbar-context" aria-label="Sección actual">
+            <span className="topbar-context-icon"><Store size={17} /></span>
+            <span className="topbar-context-copy">
+              <small>Importlilimlab · Gestión empresarial</small>
+              <strong>{title}</strong>
+            </span>
+          </div>
           <div className="topbar-actions">
             {identity.role === "ADMIN" && branches.length > 0 && (
               <label className="branch-switcher">
-                <span>Sucursal</span>
+                <Building2 size={16} aria-hidden="true" />
+                <span>Sucursal activa</span>
                 <select
                   aria-label="Sucursal activa"
                   value={selectedBranchId}
@@ -1081,7 +1303,7 @@ export default function AdminSystem() {
                       <strong>Alertas comerciales</strong>
                       <button type="button" className="notification-close" onClick={() => setAlertsOpen(false)} aria-label="Cerrar alertas">×</button>
                     </div>
-                    {alertsError ? <p className="muted">{alertsError}</p> : !commercialAlerts ? <p className="muted">Cargando alertas…</p> : (
+                    {alertsError ? <p className="muted">{alertsError}</p> : !commercialAlerts ? <p className="muted database-loading">Cargando alertas…</p> : (
                       <>
                         {commercialAlerts.overdueFollowUps.count > 0 && (
                           <section className="notification-group">
@@ -1130,10 +1352,53 @@ export default function AdminSystem() {
               </div>
             )}
             <span className="topbar-divider" />
-            <div className="top-profile">
-              <span className="avatar small">{identity.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}</span>
-              <span>{identity.name}</span>
-              <ChevronDown size={14} />
+            <div className="profile-wrap" ref={profileMenuRef}>
+              <button
+                className="top-profile"
+                type="button"
+                aria-label="Abrir menú de usuario"
+                aria-expanded={profileMenuOpen}
+                aria-haspopup="true"
+                onClick={() => setProfileMenuOpen((open) => !open)}
+              >
+                <span className="avatar small">{identity.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}</span>
+                <span className="top-profile-details">
+                  <strong>{identity.name}</strong>
+                  <small>{roleLabel(identity.role)}</small>
+                </span>
+                <ChevronDown size={15} aria-hidden="true" />
+              </button>
+              {profileMenuOpen && (
+                <div className="profile-menu" role="group" aria-label="Opciones de usuario">
+                  <div className="profile-menu-heading">
+                    <span className="avatar">{identity.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}</span>
+                    <span>
+                      <strong>{identity.name}</strong>
+                      <small>{identity.email}</small>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="profile-menu-item"
+                    onClick={() => {
+                      setProfileMenuOpen(false);
+                      setProfileDialogOpen(true);
+                    }}
+                  >
+                    <UserCog size={17} />
+                    <span>Configuración del perfil</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="profile-menu-item is-danger"
+                    disabled={loggingOut}
+                    onClick={() => void handleLogout()}
+                  >
+                    <LogOut size={17} />
+                    <span>{loggingOut ? "Cerrando sesión…" : "Cerrar sesión"}</span>
+                  </button>
+                </div>
+              )}
             </div>
             <button
               className="collapse-button"
@@ -1159,6 +1424,12 @@ export default function AdminSystem() {
           <Activity size={16} /> {toast}
         </div>
       )}
+      <ProfileDialog
+        open={profileDialogOpen}
+        onClose={() => setProfileDialogOpen(false)}
+        profile={identity}
+        onSaved={handleProfileSaved}
+      />
     </div>
     </PermissionsProvider>
   );

@@ -7,6 +7,7 @@ import {
   CircleDollarSign,
   CreditCard,
   LogOut,
+  LoaderCircle,
   Package,
   WalletCards,
 } from "lucide-react";
@@ -61,13 +62,25 @@ export default function DashboardLive({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/dashboard")
+    const controller = new AbortController();
+    let active = true;
+
+    fetch("/api/dashboard", { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error("No se pudo cargar el dashboard.");
         return response.json();
       })
-      .then(setData)
-      .catch((reason: Error) => setError(reason.message));
+      .then((result: DashboardData) => {
+        if (active) setData(result);
+      })
+      .catch((reason: Error) => {
+        if (active && !controller.signal.aborted) setError(reason.message);
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
   }, []);
 
   if (error)
@@ -79,7 +92,10 @@ export default function DashboardLive({
   if (!data)
     return (
       <div className="dashboard-content">
-        <p className="muted">Cargando indicadores reales...</p>
+        <p className="dashboard-loading muted" role="status" aria-live="polite">
+          <LoaderCircle className="spin" size={17} aria-hidden="true" />
+          Cargando indicadores reales...
+        </p>
       </div>
     );
 

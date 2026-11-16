@@ -284,7 +284,7 @@ export default function PricingPromotionsModule() {
           </button>
         </div>
         </div>
-        {isLoading ? <p className="module-message">Cargando configuración comercial…</p> : catalogTab === "price-lists" ? (
+        {isLoading ? <p className="module-message database-loading">Cargando configuración comercial…</p> : catalogTab === "price-lists" ? (
           filteredPriceLists.length === 0 ? <p className="module-message">{catalogQuery ? "No se encontraron listas de precios." : "Aún no hay listas de precios."}</p> : (
             <div className="table-scroll">
               <table>

@@ -188,7 +188,7 @@ export default function AccountStatementModal({ open, onClose, partyType, partyI
           <label>Hasta<input type="date" value={to} min={from} onChange={(event) => setTo(event.target.value)} /></label>
         </div>
         {message && <p className="module-message">{message}</p>}
-        {loading ? <p>Cargando estado de cuenta...</p> : statement && <>
+        {loading ? <p className="database-loading">Cargando estado de cuenta...</p> : statement && <>
           <div className="module-stats">
             <div><span>{statement.party.name}</span><strong>{statement.party.document}</strong><small>Saldo inicial: {money(statement.openingBalance)}</small></div>
             <div><span>Saldo al cierre</span><strong>{money(statement.closingBalance)}</strong></div>

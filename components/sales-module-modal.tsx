@@ -60,6 +60,7 @@ type Sale = {
   status: "COMPLETED" | "CANCELLED";
   paymentMethod: PaymentMethod;
   paymentReference: string | null;
+  notes: string | null;
   requiresInvoice?: boolean;
   originalPrintedAt: string | null;
   discountTotal: string;
@@ -431,6 +432,8 @@ export default function SalesModuleModal() {
       sale.number,
       sale.customer?.name ?? "Consumidor final",
       sale.customer?.document ?? "",
+      ...sale.items.map((item) => item.product.name),
+      sale.notes ?? "",
       paymentLabels[sale.paymentMethod],
       sale.paymentReference ?? "",
     ].some((value) => value.toLowerCase().includes(query)));
@@ -613,7 +616,7 @@ export default function SalesModuleModal() {
         <div className="module-toolbar">
           <div className="search-box">
             <Search size={16} />
-            <input value={salesQuery} onChange={(event) => setSalesQuery(event.target.value)} placeholder="Buscar por número o cliente..." />
+            <input value={salesQuery} onChange={(event) => setSalesQuery(event.target.value)} placeholder="Buscar por número, cliente, producto o concepto..." />
           </div>
           <button className="outline-button" type="button" onClick={() => void loadSales()} disabled={isLoadingSales}>
             {isLoadingSales ? <Loader2 size={15} className="spin" /> : "Actualizar"}
@@ -626,15 +629,24 @@ export default function SalesModuleModal() {
             <p className="module-message sales-table-message">{salesError}</p>
           ) : (
             <table>
-              <thead><tr><th>Venta</th><th>Cliente</th><th>Fecha</th><th>Medio de pago</th><th>Comprobante</th><th>Factura</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <thead><tr><th>Venta</th><th>Cliente</th><th>Productos / servicios</th><th>Concepto</th><th>Fecha</th><th>Medio de pago</th><th>Comprobante</th><th>Factura</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
               <tbody>
-                {filteredSales.length === 0 ? <tr><td colSpan={9}>No hay ventas que coincidan con la búsqueda.</td></tr> : filteredSales.map((sale) => (
+                {filteredSales.length === 0 ? <tr><td colSpan={11}>No hay ventas que coincidan con la búsqueda.</td></tr> : filteredSales.map((sale) => (
                   <tr key={sale.id}>
                     <td>
                       <strong>{sale.number}</strong>
                       {sale.originalPrintedAt && <small>Nota original emitida</small>}
                     </td>
                     <td><div className="product-cell"><span className="product-thumb"><ShoppingCart size={16} /></span><div><strong>{sale.customer?.name ?? "Consumidor final"}</strong><small>{sale.customer?.document ?? "Sin documento"}</small></div></div></td>
+                    <td>
+                      <span
+                        className="sale-concept"
+                        title={sale.items.map((item) => `${item.quantity} × ${item.product.name}`).join(", ")}
+                      >
+                        {sale.items.map((item) => `${item.quantity} × ${item.product.name}`).join(", ") || "—"}
+                      </span>
+                    </td>
+                    <td><span className="sale-concept" title={sale.notes ?? undefined}>{sale.notes?.trim() || "—"}</span></td>
                     <td>{new Date(sale.createdAt).toLocaleString("es-BO", { dateStyle: "short", timeStyle: "short" })}</td>
                     <td>{paymentLabels[sale.paymentMethod]}</td>
                     <td>{sale.paymentReference || "-"}</td>

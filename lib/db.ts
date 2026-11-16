@@ -17,10 +17,17 @@ const globalForPrisma = globalThis as unknown as {
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
 
-export async function serializableTransaction<T>(operation: (transaction: Prisma.TransactionClient) => Promise<T>) {
+export async function serializableTransaction<T>(
+  operation: (transaction: Prisma.TransactionClient) => Promise<T>,
+  options: { maxWait?: number; timeout?: number } = {},
+) {
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
-      return await prisma.$transaction(operation, { isolationLevel: 'Serializable' })
+      return await prisma.$transaction(operation, {
+        isolationLevel: 'Serializable',
+        maxWait: options.maxWait ?? 10_000,
+        timeout: options.timeout ?? 15_000,
+      })
     } catch (error) {
       const isSerializationConflict = typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2034'
       if (!isSerializationConflict || attempt === 2) throw error

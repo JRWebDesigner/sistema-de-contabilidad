@@ -160,7 +160,7 @@ export async function POST(request: Request) {
       const status = balance === 0 ? 'PAID' : 'PARTIAL'
       const reference = await nextDocumentNumber(transaction, 'P', access.session.userId, branchId)
       await transaction.accountPayable.update({ where: { id: payable.id }, data: { balance, paidAmount: paid, status } })
-      await transaction.payablePayment.create({ data: { amount: payload.data.amount, paymentMethod: payload.data.paymentMethod, reference, payableId: payable.id, cashAccountId: account.id } })
+      const payment = await transaction.payablePayment.create({ data: { amount: payload.data.amount, paymentMethod: payload.data.paymentMethod, reference, payableId: payable.id, cashAccountId: account.id } })
       await transaction.cashAccount.update({ where: { id: account.id }, data: { balance: { decrement: payload.data.amount } } })
       await transaction.cashMovement.create({ data: { type: 'OUT', amount: payload.data.amount, description: `Pago a proveedor ${payable.number}`, reference, accountId: account.id } })
       await postJournalEntry(transaction, {
@@ -184,7 +184,7 @@ export async function POST(request: Request) {
         oldValue: { balance: Number(payable.balance), paidAmount: Number(payable.paidAmount), status: payable.status },
         newValue: { balance, paidAmount: paid, status },
       }, transaction)
-      return { reference, balance, status }
+      return { paymentId: payment.id, reference, balance, status }
     })
     return NextResponse.json(result, { status: 201 })
   } catch (error) {
