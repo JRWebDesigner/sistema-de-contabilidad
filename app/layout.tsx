@@ -7,16 +7,16 @@ export const metadata: Metadata = {
   description: 'Sistema de gestión empresarial Importlilimlab para ventas, inventario, finanzas y clientes.',
   generator: 'v0.app',
   icons: {
-    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
-    apple: '/icon.svg',
+    icon: [{ url: '/logo.png', type: 'image/png' }],
+    apple: '/logo.png',
   },
 }
 
 export const viewport: Viewport = {
   colorScheme: 'light dark',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f3f8f6' },
-    { media: '(prefers-color-scheme: dark)', color: '#101f24' },
+    { media: '(prefers-color-scheme: light)', color: '#eefaf6' },
+    { media: '(prefers-color-scheme: dark)', color: '#081d22' },
   ],
 }
 

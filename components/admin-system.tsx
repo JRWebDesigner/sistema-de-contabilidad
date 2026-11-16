@@ -904,7 +904,16 @@ export default function AdminSystem() {
       >
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
-            <Building2 size={19} />
+            <img
+              src="/logo.png"
+              alt="Importlilimlab"
+              style={{ width: 22, height: 22, objectFit: 'contain', display: 'block' }}
+              onError={(event) => {
+                const target = event.currentTarget as HTMLImageElement;
+                target.style.display = 'none';
+                target.parentElement?.setAttribute('data-fallback', 'true');
+              }}
+            />
           </span>
           <span className="brand-name">
             Importlilimlab

@@ -16,27 +16,38 @@ export type PaymentReceiptPdfData = {
   recordedByAlias: string
 }
 
+const COLORS = {
+  green: '#0e7d5f',
+  greenSoft: '#def7ee',
+  blue: '#1d7cb5',
+  blueSoft: '#eaf3fb',
+  ink: '#1a2d2d',
+  muted: '#61736f',
+  line: '#dfe8e5',
+  panel: '#f7fbfd',
+}
+
 const styles = StyleSheet.create({
-  page: { padding: 38, color: '#332719', fontFamily: 'Helvetica', fontSize: 9 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#087f5b' },
-  brand: { fontSize: 18, fontWeight: 700 },
-  muted: { marginTop: 4, color: '#75685a', fontSize: 8 },
-  title: { marginTop: 18, marginBottom: 12, color: '#332719', fontSize: 15, fontWeight: 700 },
-  customer: { marginBottom: 12, lineHeight: 1.5 },
-  table: { width: '100%', borderWidth: 1, borderColor: '#d8cec2' },
-  tableHeader: { flexDirection: 'row', backgroundColor: '#fff2e6', borderBottomWidth: 1, borderBottomColor: '#d8cec2', paddingVertical: 8 },
-  tableRow: { flexDirection: 'row', paddingVertical: 9, borderBottomWidth: 1, borderBottomColor: '#eee7df' },
-  cellConcept: { width: '43%', paddingHorizontal: 7 },
-  cellDocument: { width: '23%', paddingHorizontal: 7 },
-  cellFact: { width: '14%', paddingHorizontal: 7, textAlign: 'center' },
-  cellPayment: { width: '20%', paddingHorizontal: 7, textAlign: 'right' },
-  headerText: { fontSize: 8, fontWeight: 700 },
-  totalRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: 9, borderTopWidth: 1, borderTopColor: '#332719' },
-  totalLabel: { width: '80%', paddingHorizontal: 7, textAlign: 'right', fontWeight: 700 },
-  totalAmount: { width: '20%', paddingHorizontal: 7, textAlign: 'right', fontWeight: 700 },
-  paymentLine: { marginTop: 16, padding: 11, backgroundColor: '#faf7f3', lineHeight: 1.6 },
-  metadata: { marginTop: 14, lineHeight: 1.6 },
-  footer: { position: 'absolute', left: 38, right: 38, bottom: 24, color: '#9a8d7f', fontSize: 8, textAlign: 'center' },
+  page: { padding: 38, color: COLORS.ink, fontFamily: 'Helvetica', fontSize: 11 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: COLORS.green },
+  brand: { fontSize: 20, fontWeight: 700, color: COLORS.ink },
+  muted: { marginTop: 4, color: COLORS.muted, fontSize: 9 },
+  title: { marginTop: 18, marginBottom: 12, color: COLORS.green, fontSize: 16, fontWeight: 700 },
+  customer: { marginBottom: 12, lineHeight: 1.6, color: '#2b4b49', fontSize: 10 },
+  table: { width: '100%', borderWidth: 1, borderColor: COLORS.line },
+  tableHeader: { flexDirection: 'row', backgroundColor: COLORS.greenSoft, borderBottomWidth: 1, borderBottomColor: COLORS.line, paddingVertical: 8 },
+  tableRow: { flexDirection: 'row', paddingVertical: 9, borderBottomWidth: 1, borderBottomColor: COLORS.line },
+  cellConcept: { width: '43%', paddingHorizontal: 7, color: COLORS.ink },
+  cellDocument: { width: '23%', paddingHorizontal: 7, color: COLORS.ink },
+  cellFact: { width: '14%', paddingHorizontal: 7, textAlign: 'center', color: COLORS.ink },
+  cellPayment: { width: '20%', paddingHorizontal: 7, textAlign: 'right', color: COLORS.ink },
+  headerText: { fontSize: 9, fontWeight: 700, color: COLORS.ink },
+  totalRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: 9, borderTopWidth: 1, borderTopColor: COLORS.green },
+  totalLabel: { width: '80%', paddingHorizontal: 7, textAlign: 'right', fontWeight: 700, color: COLORS.ink },
+  totalAmount: { width: '20%', paddingHorizontal: 7, textAlign: 'right', fontWeight: 700, color: COLORS.ink },
+  paymentLine: { marginTop: 16, padding: 11, backgroundColor: COLORS.panel, lineHeight: 1.6, color: '#2b4b49', fontSize: 10 },
+  metadata: { marginTop: 14, lineHeight: 1.6, color: COLORS.muted, fontSize: 9 },
+  footer: { position: 'absolute', left: 38, right: 38, bottom: 24, color: COLORS.muted, fontSize: 8, textAlign: 'center' },
 })
 
 const dateOnly = (value: string) =>

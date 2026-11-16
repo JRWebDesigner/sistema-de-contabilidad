@@ -25,6 +25,18 @@ export type AccountStatementPdfData = {
   entries: StatementPdfEntry[]
 }
 
+const COLORS = {
+  green: '#0e7d5f',
+  greenSoft: '#def7ee',
+  blue: '#1d7cb5',
+  blueSoft: '#eaf3fb',
+  ink: '#1a2d2d',
+  muted: '#61736f',
+  line: '#dfe8e5',
+  paper: '#ffffff',
+  accent: '#0f5d8d',
+}
+
 const money = (value: number) =>
   `Bs ${value.toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 
@@ -34,33 +46,33 @@ const dateFormat = new Intl.DateTimeFormat('es-BO', {
 })
 
 const styles = StyleSheet.create({
-  page: { paddingTop: 34, paddingHorizontal: 34, paddingBottom: 44, color: '#332719', fontFamily: 'Helvetica', fontSize: 8 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: '#087f5b' },
-  brand: { fontSize: 18, fontWeight: 700 },
-  subtitle: { marginTop: 4, color: '#75685a', fontSize: 8 },
-  title: { maxWidth: '60%', color: '#087f5b', fontSize: 15, fontWeight: 700, textAlign: 'right' },
-  metadata: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 8, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: '#eadfd2' },
+  page: { paddingTop: 34, paddingHorizontal: 34, paddingBottom: 44, color: COLORS.ink, fontFamily: 'Helvetica', fontSize: 10 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottomWidth: 2, borderBottomColor: COLORS.green },
+  brand: { fontSize: 20, fontWeight: 700, color: COLORS.ink },
+  subtitle: { marginTop: 4, color: COLORS.muted, fontSize: 10 },
+  title: { maxWidth: '60%', color: COLORS.green, fontSize: 17, fontWeight: 700, textAlign: 'right' },
+  metadata: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 8, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: COLORS.line },
   metadataItem: { width: '48%' },
-  metadataLabel: { color: '#897966', fontSize: 6, textTransform: 'uppercase' },
-  metadataValue: { marginTop: 3, color: '#332719', fontSize: 8 },
+  metadataLabel: { color: COLORS.muted, fontSize: 8, textTransform: 'uppercase' },
+  metadataValue: { marginTop: 3, color: COLORS.ink, fontSize: 10 },
   table: { marginTop: 12 },
-  tableHeader: { flexDirection: 'row', backgroundColor: '#087f5b' },
-  headerCell: { paddingVertical: 6, paddingHorizontal: 4, color: '#24170b', fontSize: 7, fontWeight: 700 },
-  row: { flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: '#eadfd2' },
-  alternateRow: { backgroundColor: '#fff8f0' },
-  groupStart: { borderTopWidth: 1, borderTopColor: '#d8cec2' },
-  cell: { paddingVertical: 5, paddingHorizontal: 4, color: '#4c4033', fontSize: 7 },
+  tableHeader: { flexDirection: 'row', backgroundColor: COLORS.green },
+  headerCell: { paddingVertical: 7, paddingHorizontal: 4, color: '#ffffff', fontSize: 9, fontWeight: 700 },
+  row: { flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: COLORS.line },
+  alternateRow: { backgroundColor: '#f9fcfb' },
+  groupStart: { borderTopWidth: 1, borderTopColor: '#cfe4df' },
+  cell: { paddingVertical: 5, paddingHorizontal: 4, color: '#38514e', fontSize: 9 },
   alignRight: { textAlign: 'right' },
   number: { width: '6%' },
   document: { width: '18%' },
   date: { width: '12%' },
   concept: { width: '34%' },
   amount: { width: '10%' },
-  detail: { marginTop: 3, color: '#75685a', fontSize: 6.5, lineHeight: 1.3 },
-  totals: { flexDirection: 'row', marginTop: 4, backgroundColor: '#e5f4ed', borderTopWidth: 1, borderTopColor: '#1484a6' },
-  totalLabel: { width: '70%', padding: 6, fontWeight: 700, textAlign: 'right' },
-  totalAmount: { width: '10%', padding: 6, fontSize: 7, textAlign: 'right' },
-  footer: { position: 'absolute', right: 34, bottom: 20, left: 34, flexDirection: 'row', justifyContent: 'space-between', paddingTop: 6, borderTopWidth: 0.5, borderTopColor: '#eadfd2', color: '#897966', fontSize: 7 },
+  detail: { marginTop: 3, color: COLORS.muted, fontSize: 8, lineHeight: 1.3 },
+  totals: { flexDirection: 'row', marginTop: 4, backgroundColor: COLORS.greenSoft, borderTopWidth: 1, borderTopColor: COLORS.blue },
+  totalLabel: { width: '70%', padding: 6, fontWeight: 700, textAlign: 'right', color: COLORS.ink },
+  totalAmount: { width: '10%', padding: 6, fontSize: 9, textAlign: 'right', color: COLORS.ink },
+  footer: { position: 'absolute', right: 34, bottom: 20, left: 34, flexDirection: 'row', justifyContent: 'space-between', paddingTop: 6, borderTopWidth: 0.5, borderTopColor: COLORS.line, color: COLORS.muted, fontSize: 8 },
 })
 
 function AccountStatementDocument({ statement }: { statement: AccountStatementPdfData }) {

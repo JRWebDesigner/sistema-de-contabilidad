@@ -23,20 +23,21 @@ export type OperationNotePdfData = {
   }
 }
 
-const ORANGE = '#087f5b'
-const BORDER = '#eadfd2'
+const GREEN = '#0e7d5f'
+const BLUE = '#1d7cb5'
+const BORDER = '#dfe8e5'
+const TEXT = '#1a2d2d'
+const MUTED = '#61736f'
 
 const styles = StyleSheet.create({
   page: {
     paddingTop: 36,
     paddingHorizontal: 40,
     paddingBottom: 56,
-    color: '#332719',
+    color: TEXT,
     fontFamily: 'Helvetica',
-    fontSize: 10,
+    fontSize: 11,
   },
-
-  // Cabecera
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -44,18 +45,16 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingBottom: 14,
     borderBottomWidth: 2,
-    borderBottomColor: ORANGE,
+    borderBottomColor: GREEN,
   },
-  brand: { color: '#332719', fontSize: 20, fontWeight: 700 },
-  brandSuffix: { color: ORANGE },
-  branch: { marginTop: 3, color: '#75685a', fontSize: 9, lineHeight: 1.4 },
+  brand: { color: TEXT, fontSize: 22, fontWeight: 700 },
+  brandSuffix: { color: BLUE },
+  branch: { marginTop: 3, color: MUTED, fontSize: 10, lineHeight: 1.4 },
   branchFirst: { marginTop: 6 },
   titleBlock: { alignItems: 'flex-end', maxWidth: '48%' },
-  title: { color: ORANGE, fontSize: 15, fontWeight: 700, textAlign: 'right' },
-  subtitle: { marginTop: 4, color: '#897966', fontSize: 8, textAlign: 'right' },
-  number: { marginTop: 8, color: '#332719', fontSize: 11, fontWeight: 700 },
-
-  // Datos generales (rejilla de 2 columnas)
+  title: { color: GREEN, fontSize: 17, fontWeight: 700, textAlign: 'right' },
+  subtitle: { marginTop: 4, color: MUTED, fontSize: 9, textAlign: 'right' },
+  number: { marginTop: 8, color: TEXT, fontSize: 12, fontWeight: 700 },
   infoGrid: {
     marginTop: 18,
     flexDirection: 'row',
@@ -66,26 +65,20 @@ const styles = StyleSheet.create({
     borderBottomColor: BORDER,
   },
   infoField: { width: '48%', marginBottom: 12 },
-  fieldLabel: { color: '#897966', fontSize: 8, textTransform: 'uppercase', letterSpacing: 0.4 },
-  fieldValue: { marginTop: 3, color: '#332719', fontSize: 11, lineHeight: 1.3 },
-
-  // Títulos de sección
+  fieldLabel: { color: MUTED, fontSize: 9, textTransform: 'uppercase', letterSpacing: 0.4 },
+  fieldValue: { marginTop: 3, color: TEXT, fontSize: 12, lineHeight: 1.3 },
   sectionTitle: {
     marginTop: 22,
     marginBottom: 10,
-    color: '#1484a6',
-    fontSize: 11,
+    color: BLUE,
+    fontSize: 12,
     fontWeight: 700,
   },
-
-  // Tabla del servicio
-  table: { borderBottomWidth: 1, borderBottomColor: BORDER, border: '1px solid #eadfd2' },
-  tableHeader: { flexDirection: 'row', backgroundColor: '#c0c0c0' },
-  tableHeaderCell: { paddingVertical: 8, paddingHorizontal: 8, color: '#332719', fontSize: 9, fontWeight: 700 },
+  table: { borderBottomWidth: 1, borderBottomColor: BORDER, border: '1px solid #dfe8e5' },
+  tableHeader: { flexDirection: 'row', backgroundColor: GREEN },
+  tableHeaderCell: { paddingVertical: 8, paddingHorizontal: 8, color: '#ffffff', fontSize: 10, fontWeight: 700 },
   tableRow: { flexDirection: 'row' },
-  tableCell: { paddingVertical: 11, paddingHorizontal: 8, color: '#332719', fontSize: 10, lineHeight: 1.35 },
-
-  // Resumen de pagos (a la derecha, como los totales de la nota de venta)
+  tableCell: { paddingVertical: 11, paddingHorizontal: 8, color: TEXT, fontSize: 11, lineHeight: 1.35 },
   summaryWrap: { marginTop: 16, alignItems: 'flex-end' },
   summary: { width: '52%' },
   summaryRow: {
@@ -96,8 +89,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: BORDER,
   },
-  summaryLabel: { fontSize: 10, color: '#4c4033' },
-  summaryValue: { fontSize: 10, color: '#332719' },
+  summaryLabel: { fontSize: 11, color: '#45615d' },
+  summaryValue: { fontSize: 11, color: TEXT },
   balanceRow: {
     marginTop: 8,
     flexDirection: 'row',
@@ -106,29 +99,22 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingHorizontal: 12,
     borderRadius: 3,
-    backgroundColor: ORANGE,
+    backgroundColor: GREEN,
   },
-  balanceLabel: { fontSize: 10, fontWeight: 500, color: '#000000' },
-  balanceValue: { fontSize: 10, fontWeight: 500, color: '#000000' },
-
-  // Observaciones
+  balanceLabel: { fontSize: 11, fontWeight: 500, color: '#ffffff' },
+  balanceValue: { fontSize: 11, fontWeight: 500, color: '#ffffff' },
   observationBox: {
     marginTop: 22,
     paddingVertical: 10,
-    backgroundColor: '#fff7ee',
+    backgroundColor: '#f3fcf9',
   },
-  observationText: { marginTop: 4, fontSize: 10, lineHeight: 1.4, color: '#2b2b2b' },
-
-  legal: { marginTop: 18, color: '#75685a', fontSize: 8, lineHeight: 1.4 },
-
-  // Firmas
+  observationText: { marginTop: 4, fontSize: 11, lineHeight: 1.4, color: '#294b4a' },
+  legal: { marginTop: 18, color: MUTED, fontSize: 9, lineHeight: 1.4 },
   signatures: { marginTop: 56, flexDirection: 'row', justifyContent: 'space-between', gap: 48 },
   signature: { width: '45%', alignItems: 'center' },
-  signatureLine: { width: '100%', height: 1, borderTopWidth: 1, borderTopColor: '#75685a' },
-  signatureLabel: { marginTop: 7, color: '#332719', fontSize: 9, fontWeight: 700, textAlign: 'center' },
-  signatureSubtitle: { marginTop: 3, color: '#897966', fontSize: 8, textAlign: 'center' },
-
-  // Pie de página
+  signatureLine: { width: '100%', height: 1, borderTopWidth: 1, borderTopColor: '#61736f' },
+  signatureLabel: { marginTop: 7, color: TEXT, fontSize: 10, fontWeight: 700, textAlign: 'center' },
+  signatureSubtitle: { marginTop: 3, color: MUTED, fontSize: 9, textAlign: 'center' },
   footer: {
     position: 'absolute',
     left: 40,
@@ -139,8 +125,8 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     borderTopWidth: 0.5,
     borderTopColor: BORDER,
-    color: '#897966',
-    fontSize: 8,
+    color: MUTED,
+    fontSize: 9,
   },
 })
 
