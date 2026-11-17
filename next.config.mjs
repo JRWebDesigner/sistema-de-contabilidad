@@ -8,6 +8,8 @@ const nextConfig = {
   },
   allowedDevOrigins: [
     'contabilidad.businessmansrl.com',
+    'sistema-importlilimlab.vercel.app',
+    'sistema.importlilimlab.com',
     '192.168.0.6',
   ],
 }
